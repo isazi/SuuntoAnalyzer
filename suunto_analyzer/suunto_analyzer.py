@@ -12,11 +12,16 @@ def command_line():
 
 
 def __main__():
+    print("Suunto Analyzer")
+    print()
+
     arguments = command_line()
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
     if arguments.snr:
         gps.gps_snr_analysis(activity)
+
+    print()
     return 0
 
 
