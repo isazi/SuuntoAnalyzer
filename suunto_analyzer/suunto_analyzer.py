@@ -1,27 +1,37 @@
 import argparse
+import datetime
 import json_reader
-import gps
+import analysis
 
 
 def command_line():
     parser = argparse.ArgumentParser()
     # Files
     parser.add_argument("-f", "--filename", type=str, required=True)
+    parser.add_argument("--duration", action="store_true")
     parser.add_argument("--snr", action="store_true")
+    parser.add_argument("--battery", action="store_true")
     return parser.parse_args()
 
 
 def __main__():
-    print("Suunto Analyzer")
+    print("Suunto Activity Analyzer (SAA)")
     print()
 
     arguments = command_line()
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
-    if arguments.snr:
-        gps.gps_snr_analysis(activity)
-
+    print(f"Device:\t\t{activity.name}")
     print()
+    if arguments.duration:
+        print(f"Duration:\t{datetime.timedelta(seconds=activity.duration)}")
+        print()
+    if arguments.snr:
+        analysis.gps_snr_analysis(activity)
+        print()
+    if arguments.battery:
+        analysis.battery_analysis(activity)
+        print()
     return 0
 
 
