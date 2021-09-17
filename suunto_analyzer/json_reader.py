@@ -47,4 +47,3 @@ class SuuntoJSON:
             except KeyError:
                 pass
         file.close()
-

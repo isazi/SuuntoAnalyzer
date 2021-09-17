@@ -14,7 +14,6 @@ def gps_snr_analysis(activity: SuuntoJSON):
     print(f"SNR histogram:\t{numpy.histogram(snr_values)[0]}")
 
 
-
 def battery_analysis(activity: SuuntoJSON):
     battery_values = []
     for value in activity.battery_charge.values():
