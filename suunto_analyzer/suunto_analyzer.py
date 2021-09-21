@@ -23,6 +23,7 @@ def __main__():
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
     print(f"Device:\t\t{activity.name}")
+    print(f"Time:\t\t{activity.datetime}")
     print()
     if arguments.duration:
         print(f"Duration:\t{datetime.timedelta(seconds=activity.duration)}")

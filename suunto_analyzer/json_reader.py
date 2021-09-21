@@ -1,10 +1,12 @@
 import json
+import datetime
 from collections import OrderedDict
 
 
 class SuuntoJSON:
     def __init__(self):
         self.name = None
+        self.datetime = None
         self.duration = 0
         self.distance = 0
         self.altitude = OrderedDict()
@@ -18,6 +20,10 @@ class SuuntoJSON:
         # Header
         try:
             self.name = f"{temp['DeviceLog']['Header']['Device']['Name']} {temp['DeviceLog']['Header']['Device']['Info']['SW']}"
+        except KeyError:
+            pass
+        try:
+            self.datetime = datetime.datetime.fromisoformat(temp["DeviceLog"]["Header"]["DateTime"])
         except KeyError:
             pass
         try:
