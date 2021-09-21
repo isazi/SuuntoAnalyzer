@@ -6,6 +6,7 @@ class SuuntoJSON:
     def __init__(self):
         self.name = None
         self.duration = 0
+        self.distance = 0
         self.altitude = OrderedDict()
         self.gps_altitude = OrderedDict()
         self.gps_snr = OrderedDict()
@@ -21,6 +22,10 @@ class SuuntoJSON:
             pass
         try:
             self.duration = float(temp["DeviceLog"]["Header"]["Duration"])
+        except KeyError:
+            pass
+        try:
+            self.distance = float(temp["DeviceLog"]["Header"]["Duration"]) / 1000
         except KeyError:
             pass
         # Samples

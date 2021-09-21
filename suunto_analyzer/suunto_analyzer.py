@@ -9,6 +9,7 @@ def command_line():
     # Files
     parser.add_argument("-f", "--filename", type=str, required=True)
     parser.add_argument("--duration", action="store_true")
+    parser.add_argument("--distance", action="store_true")
     parser.add_argument("--snr", action="store_true")
     parser.add_argument("--battery", action="store_true")
     return parser.parse_args()
@@ -25,6 +26,9 @@ def __main__():
     print()
     if arguments.duration:
         print(f"Duration:\t{datetime.timedelta(seconds=activity.duration)}")
+        print()
+    if arguments.distance:
+        print(f"Distance:\t{activity.distance} km")
         print()
     if arguments.snr:
         analysis.gps_snr_analysis(activity)
