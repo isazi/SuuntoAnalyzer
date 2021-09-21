@@ -22,7 +22,7 @@ def __main__():
     arguments = command_line()
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
-    print(f"Device:\t\t{activity.name}")
+    print(f"Device:\t\t{activity.name} ({activity.gnss})")
     print(f"Time:\t\t{activity.datetime}")
     print()
     if arguments.duration:

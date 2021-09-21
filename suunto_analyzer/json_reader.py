@@ -7,6 +7,7 @@ class SuuntoJSON:
     def __init__(self):
         self.name = None
         self.datetime = None
+        self.gnss = str()
         self.duration = 0
         self.distance = 0
         self.altitude = OrderedDict()
@@ -24,6 +25,10 @@ class SuuntoJSON:
             pass
         try:
             self.datetime = datetime.datetime.fromisoformat(temp["DeviceLog"]["Header"]["DateTime"])
+        except KeyError:
+            pass
+        try:
+            self.gnss = temp["DeviceLog"]["Header"]["Settings"]["EnabledNavigationSystems"]
         except KeyError:
             pass
         try:
