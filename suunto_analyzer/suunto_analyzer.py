@@ -12,6 +12,7 @@ def command_line():
     parser.add_argument("--distance", action="store_true")
     parser.add_argument("--snr", action="store_true")
     parser.add_argument("--battery", action="store_true")
+    parser.add_argument("--cadence", action="store_true")
     return parser.parse_args()
 
 
@@ -22,7 +23,8 @@ def __main__():
     arguments = command_line()
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
-    print(f"Device:\t\t{activity.name} ({activity.gnss})")
+    print(f"Device:\t\t{activity.name}")
+    print(f"GNSS:\t\t{activity.gnss}")
     print(f"Time:\t\t{activity.datetime}")
     print()
     if arguments.duration:
@@ -36,6 +38,9 @@ def __main__():
         print()
     if arguments.battery:
         analysis.battery_analysis(activity)
+        print()
+    if arguments.cadence:
+        analysis.cadence_analysis(activity)
         print()
     return 0
 

@@ -25,3 +25,13 @@ def battery_analysis(activity: SuuntoJSON):
     print(f"Min battery:\t{min_battery * 100.0}%")
     print(f"Consumption:\t{(max_battery - min_battery) * 100.0}%")
     print(f"Estimated life:\t{datetime.timedelta(seconds=(activity.duration / (max_battery - min_battery)))}")
+
+
+def cadence_analysis(activity: SuuntoJSON):
+    cadence_values = []
+    for value in activity.cadence.values():
+        cadence_values.append(value)
+    cadence_values = numpy.array(cadence_values)
+    print(f"Min cadence:\t{numpy.min(cadence_values)}")
+    print(f"Avg cadence:\t{numpy.average(cadence_values)} ±{numpy.std(cadence_values)}")
+    print(f"Max cadence:\t{numpy.max(cadence_values)}")

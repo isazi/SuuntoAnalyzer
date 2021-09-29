@@ -14,6 +14,7 @@ class SuuntoJSON:
         self.gps_altitude = OrderedDict()
         self.gps_snr = OrderedDict()
         self.battery_charge = OrderedDict()
+        self.cadence = OrderedDict()
 
     def load_file(self, filename: str):
         with open(filename) as file:
@@ -60,6 +61,11 @@ class SuuntoJSON:
             # Battery charge
             try:
                 self.battery_charge[timestamp] = sample["BatteryCharge"]
+            except KeyError:
+                pass
+            # Cadence
+            try:
+                self.cadence[timestamp] = 60.0 * sample["Cadence"]
             except KeyError:
                 pass
         file.close()
