@@ -2,6 +2,7 @@ import argparse
 import datetime
 import json_reader
 import analysis
+import plot
 
 
 def command_line():
@@ -13,6 +14,7 @@ def command_line():
     parser.add_argument("--snr", action="store_true")
     parser.add_argument("--battery", action="store_true")
     parser.add_argument("--cadence", action="store_true")
+    parser.add_argument("--altitude", action="store_true")
     return parser.parse_args()
 
 
@@ -35,6 +37,10 @@ def __main__():
         print()
     if arguments.snr:
         analysis.gps_snr_analysis(activity)
+        print()
+    if arguments.altitude:
+        analysis.altitude_analysis(activity)
+        plot.altitude_plot(activity)
         print()
     if arguments.battery:
         analysis.battery_analysis(activity)
