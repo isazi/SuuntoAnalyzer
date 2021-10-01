@@ -65,7 +65,8 @@ class SuuntoJSON:
                 pass
             # Cadence
             try:
-                self.cadence[timestamp] = 60.0 * sample["Cadence"]
+                if sample["Cadence"] is not None:
+                    self.cadence[timestamp] = 60.0 * sample["Cadence"]
             except KeyError:
                 pass
         file.close()
