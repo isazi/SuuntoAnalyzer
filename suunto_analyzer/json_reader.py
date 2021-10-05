@@ -37,7 +37,7 @@ class SuuntoJSON:
         except KeyError:
             pass
         try:
-            self.distance = float(temp["DeviceLog"]["Header"]["Duration"]) / 1000
+            self.distance = float(temp["DeviceLog"]["Header"]["Distance"]) / 1000
         except KeyError:
             pass
         # Samples
