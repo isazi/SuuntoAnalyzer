@@ -45,7 +45,8 @@ class SuuntoJSON:
             timestamp = sample["TimeISO8601"]
             # Altitude
             try:
-                self.altitude[timestamp] = sample["Altitude"]
+                if sample["Altitude"] is not None:
+                    self.altitude[timestamp] = sample["Altitude"]
             except KeyError:
                 pass
             # GPS altitude
