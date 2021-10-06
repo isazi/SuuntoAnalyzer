@@ -35,7 +35,7 @@ def __main__():
         print(f"Duration:\t{datetime.timedelta(seconds=activity.duration)}")
         print()
     if arguments.distance:
-        print(f"Distance:\t{activity.distance} km")
+        print(f"Distance:\t{activity.distance:.2f} km")
         print()
     if arguments.snr:
         analysis.gps_snr_analysis(activity)

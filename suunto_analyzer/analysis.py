@@ -9,7 +9,7 @@ def gps_snr_analysis(activity: SuuntoJSON):
         snr_values.append(snr)
     snr_values = numpy.array(snr_values)
     print(f"Mininum SNR:\t{numpy.min(snr_values)}")
-    print(f"Average SNR:\t{numpy.average(snr_values)} ±{numpy.std(snr_values)}")
+    print(f"Average SNR:\t{numpy.average(snr_values):.1f} ±{numpy.std(snr_values):.1f}")
     print(f"Maximum SNR:\t{numpy.max(snr_values)}")
     print(f"SNR histogram:\t{numpy.histogram(snr_values)[0]}")
 
@@ -23,7 +23,7 @@ def battery_analysis(activity: SuuntoJSON):
     min_battery = numpy.min(battery_values)
     print(f"Max battery:\t{max_battery * 100.0}%")
     print(f"Min battery:\t{min_battery * 100.0}%")
-    print(f"Consumption:\t{(max_battery - min_battery) * 100.0}%")
+    print(f"Consumption:\t{((max_battery - min_battery) * 100.0):.1f}%")
     print(f"Estimated life:\t{datetime.timedelta(seconds=(activity.duration / (max_battery - min_battery)))}")
 
 
@@ -32,9 +32,9 @@ def cadence_analysis(activity: SuuntoJSON):
     for value in activity.cadence.values():
         cadence_values.append(value)
     cadence_values = numpy.array(cadence_values)
-    print(f"Min cadence:\t{numpy.min(cadence_values)}")
-    print(f"Avg cadence:\t{numpy.average(cadence_values)} ±{numpy.std(cadence_values)}")
-    print(f"Max cadence:\t{numpy.max(cadence_values)}")
+    print(f"Min cadence:\t{int(numpy.min(cadence_values))}")
+    print(f"Avg cadence:\t{int(numpy.average(cadence_values))} ±{int(numpy.std(cadence_values))}")
+    print(f"Max cadence:\t{int(numpy.max(cadence_values))}")
 
 
 def altitude_analysis(activity: SuuntoJSON):
@@ -46,5 +46,5 @@ def altitude_analysis(activity: SuuntoJSON):
         gps_altitude_values.append(value)
     altitude_values = numpy.array(altitude_values)
     gps_altitude_values = numpy.array(gps_altitude_values)
-    print(f"Min altitude:\t{numpy.min(altitude_values)}m (altimeter) {numpy.min(gps_altitude_values)}m (GPS)")
-    print(f"Max altitude:\t{numpy.max(altitude_values)}m (altimeter) {numpy.max(gps_altitude_values)}m (GPS)")
+    print(f"Min altitude:\taltimeter = {numpy.min(altitude_values):.2f}m\tGNSS = {numpy.min(gps_altitude_values):.2f}m")
+    print(f"Max altitude:\taltimeter = {numpy.max(altitude_values):.2f}m\tGNSS = {numpy.max(gps_altitude_values):.2f}m")
