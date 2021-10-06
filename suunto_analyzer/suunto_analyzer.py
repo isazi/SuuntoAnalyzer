@@ -9,6 +9,7 @@ def command_line():
     parser = argparse.ArgumentParser()
     # Files
     parser.add_argument("-f", "--filename", type=str, required=True)
+    parser.add_argument("--plot", action="store_true")
     parser.add_argument("--duration", action="store_true")
     parser.add_argument("--distance", action="store_true")
     parser.add_argument("--snr", action="store_true")
@@ -41,7 +42,6 @@ def __main__():
         print()
     if arguments.altitude:
         analysis.altitude_analysis(activity)
-        plot.altitude_plot(activity)
         print()
     if arguments.battery:
         analysis.battery_analysis(activity)
@@ -49,6 +49,9 @@ def __main__():
     if arguments.cadence:
         analysis.cadence_analysis(activity)
         print()
+    if arguments.plot:
+        if arguments.altitude:
+            plot.altitude_plot(activity)
     return 0
 
 
