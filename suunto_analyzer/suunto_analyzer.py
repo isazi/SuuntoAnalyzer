@@ -1,5 +1,7 @@
 import argparse
 import datetime
+from os import path
+
 import json_reader
 import analysis
 import plot
@@ -26,7 +28,7 @@ def __main__():
     arguments = command_line()
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
-    print(f"Filename:\t{arguments.filename}")
+    print(f"Filename:\t{path.basename(arguments.filename)}")
     print(f"Device:\t\t{activity.name}")
     print(f"GNSS:\t\t{activity.gnss}")
     print(f"Time:\t\t{activity.datetime}")
