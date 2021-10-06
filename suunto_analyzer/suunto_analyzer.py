@@ -52,6 +52,8 @@ def __main__():
     if arguments.plot:
         if arguments.altitude:
             plot.altitude_plot(activity)
+        if arguments.cadence:
+            plot.cadence_plot(activity)
     return 0
 
 

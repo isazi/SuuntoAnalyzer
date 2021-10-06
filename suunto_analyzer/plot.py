@@ -14,3 +14,12 @@ def altitude_plot(activity: SuuntoJSON):
     plt.xticks([])
     plt.legend()
     plt.show()
+
+
+def cadence_plot(activity: SuuntoJSON):
+    matplotlib.use("GTK3Cairo")
+    plt.plot([i for i in range(0, len(activity.cadence.keys()))], activity.cadence.values(), "bo")
+    plt.ylabel("Cadence (rpm)")
+    plt.xlabel("Time")
+    plt.xticks([])
+    plt.show()
