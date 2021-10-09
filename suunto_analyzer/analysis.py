@@ -32,9 +32,9 @@ def cadence_analysis(activity: SuuntoJSON):
     for value in activity.cadence.values():
         cadence_values.append(value)
     cadence_values = numpy.array(cadence_values)
-    print(f"Min cadence:\t{int(numpy.min(cadence_values))}")
-    print(f"Avg cadence:\t{int(numpy.average(cadence_values))} ±{int(numpy.std(cadence_values))}")
-    print(f"Max cadence:\t{int(numpy.max(cadence_values))}")
+    print(f"Min cadence:\t{numpy.min(cadence_values):.2f}")
+    print(f"Avg cadence:\t{numpy.average(cadence_values):.2f} ±{numpy.std(cadence_values):.2f}")
+    print(f"Max cadence:\t{numpy.max(cadence_values):.2f}")
 
 
 def altitude_analysis(activity: SuuntoJSON):
