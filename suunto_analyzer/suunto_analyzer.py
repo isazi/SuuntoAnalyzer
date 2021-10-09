@@ -52,6 +52,8 @@ def __main__():
         analysis.cadence_analysis(activity)
         print()
     if arguments.plot:
+        if arguments.snr:
+            plot.gps_snr_plot(activity)
         if arguments.altitude:
             plot.altitude_plot(activity)
         if arguments.cadence:

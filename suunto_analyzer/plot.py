@@ -27,3 +27,14 @@ def cadence_plot(activity: SuuntoJSON):
     plt.xticks([])
     plt.gcf().autofmt_xdate()
     plt.show()
+
+
+def gps_snr_plot(activity: SuuntoJSON):
+    x_gps_snr = [datetime.datetime.fromisoformat(i) for i in activity.gps_snr.keys()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_gps_snr, activity.gps_snr.values())
+    plt.ylabel("GNSS SNR")
+    plt.xlabel("Time")
+    plt.xticks([])
+    plt.gcf().autofmt_xdate()
+    plt.show()
