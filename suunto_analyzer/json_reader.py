@@ -63,7 +63,8 @@ class SuuntoJSON:
                 pass
             # GPS altitude
             try:
-                self.gps_altitude[timestamp] = sample["GPSAltitude"]
+                if sample["GPSAltitude"] is not None:
+                    self.gps_altitude[timestamp] = sample["GPSAltitude"]
             except KeyError:
                 pass
             # SNR 5 best satellites
