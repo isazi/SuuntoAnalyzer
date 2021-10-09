@@ -50,3 +50,12 @@ def altitude_analysis(activity: SuuntoJSON):
     print(f"Descent:\t{activity.descent}")
     print(f"Min altitude:\taltimeter = {numpy.min(altitude_values):.2f}m\tGNSS = {numpy.min(gps_altitude_values):.2f}m")
     print(f"Max altitude:\taltimeter = {numpy.max(altitude_values):.2f}m\tGNSS = {numpy.max(gps_altitude_values):.2f}m")
+
+
+def power_analysis(activity: SuuntoJSON):
+    power_values = [i for i in activity.power.values()]
+    if len(power_values) >= 1:
+        power_values = numpy.array(power_values)
+        print(f"Min power:\t{numpy.min(power_values):.2f}")
+        print(f"Avg power:\t{numpy.average(power_values):.2f} ±{numpy.std(power_values):.2f}")
+        print(f"Max power:\t{numpy.max(power_values):.2f}")

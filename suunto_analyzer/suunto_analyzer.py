@@ -18,6 +18,7 @@ def command_line():
     parser.add_argument("--battery", action="store_true")
     parser.add_argument("--cadence", action="store_true")
     parser.add_argument("--altitude", action="store_true")
+    parser.add_argument("--power", action="store_true")
     return parser.parse_args()
 
 
@@ -50,6 +51,9 @@ def __main__():
         print()
     if arguments.cadence:
         analysis.cadence_analysis(activity)
+        print()
+    if arguments.power:
+        analysis.power_analysis(activity)
         print()
     if arguments.plot:
         if arguments.snr:
