@@ -10,6 +10,8 @@ class SuuntoJSON:
         self.gnss = str()
         self.duration = 0
         self.distance = 0
+        self.ascent = 0
+        self.descent = 0
         self.altitude = OrderedDict()
         self.gps_altitude = OrderedDict()
         self.gps_snr = OrderedDict()
@@ -38,6 +40,16 @@ class SuuntoJSON:
             pass
         try:
             self.distance = float(temp["DeviceLog"]["Header"]["Distance"]) / 1000
+        except KeyError:
+            pass
+        try:
+            if temp["DeviceLog"]["Header"]["Ascent"] is not None:
+                self.ascent = temp["DeviceLog"]["Header"]["Ascent"]
+        except KeyError:
+            pass
+        try:
+            if temp["DeviceLog"]["Header"]["Descent"] is not None:
+                self.descent = temp["DeviceLog"]["Header"]["Descent"]
         except KeyError:
             pass
         # Samples

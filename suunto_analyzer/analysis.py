@@ -46,5 +46,7 @@ def altitude_analysis(activity: SuuntoJSON):
         gps_altitude_values.append(value)
     altitude_values = numpy.array(altitude_values)
     gps_altitude_values = numpy.array(gps_altitude_values)
+    print(f"Ascent:\t\t{activity.ascent}")
+    print(f"Descent:\t{activity.descent}")
     print(f"Min altitude:\taltimeter = {numpy.min(altitude_values):.2f}m\tGNSS = {numpy.min(gps_altitude_values):.2f}m")
     print(f"Max altitude:\taltimeter = {numpy.max(altitude_values):.2f}m\tGNSS = {numpy.max(gps_altitude_values):.2f}m")
