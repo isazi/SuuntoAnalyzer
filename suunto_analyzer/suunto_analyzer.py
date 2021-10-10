@@ -14,6 +14,7 @@ def command_line():
     parser.add_argument("--plot", action="store_true")
     parser.add_argument("--duration", action="store_true")
     parser.add_argument("--distance", action="store_true")
+    parser.add_argument("--sensors", action="store_true")
     parser.add_argument("--snr", action="store_true")
     parser.add_argument("--battery", action="store_true")
     parser.add_argument("--cadence", action="store_true")
@@ -34,6 +35,9 @@ def __main__():
     print(f"GNSS:\t\t{activity.gnss}")
     print(f"Time:\t\t{activity.datetime}")
     print()
+    if arguments.sensors and len(activity.sensors) >= 1:
+        print(f"Sensors:\t{activity.sensors}")
+        print()
     if arguments.duration:
         print(f"Duration:\t{datetime.timedelta(seconds=activity.duration)}")
         print()

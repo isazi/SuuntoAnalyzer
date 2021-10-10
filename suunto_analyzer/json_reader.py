@@ -13,6 +13,7 @@ class SuuntoJSON:
         self.running_distance = OrderedDict()
         self.ascent = 0
         self.descent = 0
+        self.sensors = []
         self.altitude = OrderedDict()
         self.gps_altitude = OrderedDict()
         self.gps_snr = OrderedDict()
@@ -52,6 +53,26 @@ class SuuntoJSON:
         try:
             if temp["DeviceLog"]["Header"]["Descent"] is not None:
                 self.descent = temp["DeviceLog"]["Header"]["Descent"]
+        except KeyError:
+            pass
+        try:
+            if temp["DeviceLog"]["Header"]["Settings"]["BikePodUsed"] is True:
+                self.sensors.append("Bike Pod")
+        except KeyError:
+            pass
+        try:
+            if temp["DeviceLog"]["Header"]["Settings"]["FootPodUsed"] is True:
+                self.sensors.append("Foot Pod")
+        except KeyError:
+            pass
+        try:
+            if temp["DeviceLog"]["Header"]["Settings"]["PowerPodUsed"] is True:
+                self.sensors.append("Power Pod")
+        except KeyError:
+            pass
+        try:
+            if temp["DeviceLog"]["Header"]["Settings"]["HrUsed"] is True:
+                self.sensors.append("Heart Rate")
         except KeyError:
             pass
         # Samples
