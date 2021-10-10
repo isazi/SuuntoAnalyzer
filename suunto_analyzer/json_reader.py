@@ -10,6 +10,7 @@ class SuuntoJSON:
         self.gnss = str()
         self.duration = 0
         self.distance = 0
+        self.running_distance = OrderedDict()
         self.ascent = 0
         self.descent = 0
         self.altitude = OrderedDict()
@@ -87,6 +88,11 @@ class SuuntoJSON:
             try:
                 if sample["Power"] is not None:
                     self.power[timestamp] = sample["Power"]
+            except KeyError:
+                pass
+            try:
+                if sample["Distance"] is not None:
+                    self.running_distance[timestamp] = sample["Distance"]
             except KeyError:
                 pass
         file.close()
