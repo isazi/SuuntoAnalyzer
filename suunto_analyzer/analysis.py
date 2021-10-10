@@ -53,3 +53,12 @@ def power_analysis(activity: SuuntoJSON):
         print(f"Min power:\t{numpy.min(power_values):.2f}")
         print(f"Avg power:\t{numpy.average(power_values):.2f} ±{numpy.std(power_values):.2f}")
         print(f"Max power:\t{numpy.max(power_values):.2f}")
+
+
+def hr_analysis(activity: SuuntoJSON):
+    hr_values = [i for i in activity.hr.values()]
+    if len(hr_values) >= 1:
+        hr_values = numpy.array(hr_values)
+        print(f"Min HR:\t\t{numpy.min(hr_values):.2f}")
+        print(f"Avg HR:\t\t{numpy.average(hr_values):.2f} ±{numpy.std(hr_values):.2f}")
+        print(f"Max HR:\t\t{numpy.max(hr_values):.2f}")

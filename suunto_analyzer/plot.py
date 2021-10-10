@@ -38,3 +38,14 @@ def gps_snr_plot(activity: SuuntoJSON):
     plt.xticks([])
     plt.gcf().autofmt_xdate()
     plt.show()
+
+
+def hr_plot(activity: SuuntoJSON):
+    x_hr = [datetime.datetime.fromisoformat(i) for i in activity.hr.keys()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_hr, activity.hr.values())
+    plt.ylabel("Heart Rate (bpm)")
+    plt.xlabel("Time")
+    plt.xticks([])
+    plt.gcf().autofmt_xdate()
+    plt.show()

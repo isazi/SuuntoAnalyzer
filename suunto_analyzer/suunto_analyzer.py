@@ -20,6 +20,7 @@ def command_line():
     parser.add_argument("--cadence", action="store_true")
     parser.add_argument("--altitude", action="store_true")
     parser.add_argument("--power", action="store_true")
+    parser.add_argument("--hr", action="store_true")
     return parser.parse_args()
 
 
@@ -56,6 +57,9 @@ def __main__():
     if arguments.cadence:
         analysis.cadence_analysis(activity)
         print()
+    if arguments.hr:
+        analysis.hr_analysis(activity)
+        print()
     if arguments.power:
         analysis.power_analysis(activity)
         print()
@@ -66,6 +70,8 @@ def __main__():
             plot.altitude_plot(activity)
         if arguments.cadence:
             plot.cadence_plot(activity)
+        if arguments.hr:
+            plot.hr_plot(activity)
     return 0
 
 
