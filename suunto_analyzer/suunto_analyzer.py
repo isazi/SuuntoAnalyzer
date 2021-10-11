@@ -88,6 +88,8 @@ def __main__():
             plot.compare_cadence_plot(activity, other_activity)
         if arguments.hr:
             plot.compare_hr_plot(activity, other_activity)
+        if arguments.distance:
+            plot.compare_running_distance_plot(activity, other_activity)
 
 
 if __name__ == "__main__":

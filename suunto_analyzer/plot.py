@@ -101,3 +101,16 @@ def compare_hr_plot(activity_one: SuuntoJSON, activity_two: SuuntoJSON):
     plt.legend()
     plt.gcf().autofmt_xdate()
     plt.show()
+
+
+def compare_running_distance_plot(activity_one: SuuntoJSON, activity_two: SuuntoJSON):
+    x_running_distance_one = [datetime.datetime.fromisoformat(i) for i in activity_one.running_distance.keys()]
+    x_running_distance_two = [datetime.datetime.fromisoformat(i) for i in activity_two.running_distance.keys()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_running_distance_one, activity_one.running_distance.values(), label=activity_one.name)
+    plt.plot(x_running_distance_two, activity_two.running_distance.values(), label=activity_two.name)
+    plt.ylabel("Distance (m)")
+    plt.xlabel("Time")
+    plt.legend()
+    plt.gcf().autofmt_xdate()
+    plt.show()
