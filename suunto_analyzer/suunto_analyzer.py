@@ -76,6 +76,8 @@ def __main__():
             plot.cadence_plot(activity)
         if arguments.hr:
             plot.hr_plot(activity)
+        if arguments.battery:
+            plot.battery_charge_plot(activity)
     # Comparing with another file
     if arguments.compare and arguments.filename2 is not None:
         other_activity = json_reader.SuuntoJSON()

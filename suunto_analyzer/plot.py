@@ -114,3 +114,14 @@ def compare_running_distance_plot(activity_one: SuuntoJSON, activity_two: Suunto
     plt.legend()
     plt.gcf().autofmt_xdate()
     plt.show()
+
+
+def battery_charge_plot(activity: SuuntoJSON):
+    x_battery_charge = [datetime.datetime.fromisoformat(i) for i in activity.battery_charge.keys()]
+    battery_charge = [i * 100.0 for i in activity.battery_charge.values()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_battery_charge, battery_charge)
+    plt.ylabel("Battery Charge (%)")
+    plt.xlabel("Time")
+    plt.gcf().autofmt_xdate()
+    plt.show()
