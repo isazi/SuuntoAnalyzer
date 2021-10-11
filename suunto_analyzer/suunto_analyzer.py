@@ -10,7 +10,7 @@ import plot
 def command_line():
     parser = argparse.ArgumentParser()
     # Files
-    parser.add_argument("-f", "--filename", type=str, required=True)
+    parser.add_argument("-f", "--filename", help="File to analyze", type=str, required=True)
     parser.add_argument("--plot", action="store_true")
     parser.add_argument("--duration", action="store_true")
     parser.add_argument("--distance", action="store_true")
@@ -21,6 +21,8 @@ def command_line():
     parser.add_argument("--altitude", action="store_true")
     parser.add_argument("--power", action="store_true")
     parser.add_argument("--hr", action="store_true")
+    parser.add_argument("--compare", action="store_true")
+    parser.add_argument("-f2", "--filename2", help="File to compare with.", type=str)
     return parser.parse_args()
 
 
@@ -31,6 +33,7 @@ def __main__():
     arguments = command_line()
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
+    # Base functions
     print(f"Filename:\t{path.basename(arguments.filename)}")
     print(f"Device:\t\t{activity.name}")
     print(f"GNSS:\t\t{activity.gnss}")
@@ -63,6 +66,7 @@ def __main__():
     if arguments.power:
         analysis.power_analysis(activity)
         print()
+    # Plotting
     if arguments.plot:
         if arguments.snr:
             plot.gps_snr_plot(activity)
@@ -72,7 +76,18 @@ def __main__():
             plot.cadence_plot(activity)
         if arguments.hr:
             plot.hr_plot(activity)
-    return 0
+    # Comparing with another file
+    if arguments.compare and arguments.filename2 is not None:
+        other_activity = json_reader.SuuntoJSON()
+        other_activity.load_file(arguments.filename2)
+        if arguments.snr:
+            plot.compare_gps_snr_plot(activity, other_activity)
+        if arguments.altitude:
+            plot.compare_altitude_plot(activity, other_activity)
+        if arguments.cadence:
+            plot.compare_cadence_plot(activity, other_activity)
+        if arguments.hr:
+            plot.compare_hr_plot(activity, other_activity)
 
 
 if __name__ == "__main__":
