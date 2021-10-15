@@ -8,6 +8,7 @@ class SuuntoJSON:
         self.name = None
         self.datetime = None
         self.gnss = str()
+        self.steps = 0
         self.duration = 0
         self.distance = 0
         self.running_distance = OrderedDict()
@@ -74,6 +75,11 @@ class SuuntoJSON:
         try:
             if temp["DeviceLog"]["Header"]["Settings"]["HrUsed"] is True:
                 self.sensors.append("Heart Rate")
+        except KeyError:
+            pass
+        try:
+            if temp["DeviceLog"]["Header"]["StepCount"] is not None:
+                self.steps = temp["DeviceLog"]["Header"]["StepCount"]
         except KeyError:
             pass
         # Samples

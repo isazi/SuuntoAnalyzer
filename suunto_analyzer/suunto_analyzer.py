@@ -14,6 +14,7 @@ def command_line():
     parser.add_argument("--plot", action="store_true")
     parser.add_argument("--duration", action="store_true")
     parser.add_argument("--distance", action="store_true")
+    parser.add_argument("--steps", action="store_true")
     parser.add_argument("--sensors", action="store_true")
     parser.add_argument("--snr", action="store_true")
     parser.add_argument("--battery", action="store_true")
@@ -47,6 +48,9 @@ def __main__():
         print()
     if arguments.distance:
         print(f"Distance:\t{activity.distance:.2f} km")
+        print()
+    if arguments.steps:
+        print(f"Steps:\t\t{activity.steps}")
         print()
     if arguments.snr:
         analysis.gps_snr_analysis(activity)
