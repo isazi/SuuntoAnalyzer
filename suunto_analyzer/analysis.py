@@ -62,3 +62,9 @@ def hr_analysis(activity: SuuntoJSON):
         print(f"Min HR:\t\t{numpy.min(hr_values):.2f}")
         print(f"Avg HR:\t\t{numpy.average(hr_values):.2f} ±{numpy.std(hr_values):.2f}")
         print(f"Max HR:\t\t{numpy.max(hr_values):.2f}")
+    elif len(activity.rr) >= 1:
+        # TODO: remove outliers from data
+        hr_values = [(1000 / i) * 60.0 for i in activity.rr]
+        print(f"Min HR:\t\t{numpy.min(hr_values):.2f}")
+        print(f"Avg HR:\t\t{numpy.average(hr_values):.2f} ±{numpy.std(hr_values):.2f}")
+        print(f"Max HR:\t\t{numpy.max(hr_values):.2f}")

@@ -81,13 +81,21 @@ def compare_gps_snr_plot(activity_one: SuuntoJSON, activity_two: SuuntoJSON):
 
 
 def hr_plot(activity: SuuntoJSON):
-    x_hr = [datetime.datetime.fromisoformat(i) for i in activity.hr.keys()]
-    matplotlib.use("GTK3Cairo")
-    plt.plot(x_hr, activity.hr.values())
-    plt.ylabel("Heart Rate (bpm)")
-    plt.xlabel("Time")
-    plt.gcf().autofmt_xdate()
-    plt.show()
+    if len(activity.hr.values()) >= 1:
+        x_hr = [datetime.datetime.fromisoformat(i) for i in activity.hr.keys()]
+        matplotlib.use("GTK3Cairo")
+        plt.plot(x_hr, activity.hr.values())
+        plt.ylabel("Heart Rate (bpm)")
+        plt.xlabel("Time")
+        plt.gcf().autofmt_xdate()
+        plt.show()
+    elif len(activity.rr) >= 1:
+        matplotlib.use("GTK3Cairo")
+        plt.plot(activity.rr, "ro")
+        plt.ylabel("Inter-Beat Interval (ms)")
+        plt.xlabel("Time")
+        plt.gcf().autofmt_xdate()
+        plt.show()
 
 
 def compare_hr_plot(activity_one: SuuntoJSON, activity_two: SuuntoJSON):
