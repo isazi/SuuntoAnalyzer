@@ -15,6 +15,7 @@ class SuuntoJSON:
         self.ascent = 0
         self.descent = 0
         self.sensors = []
+        self.apps = []
         self.altitude = OrderedDict()
         self.gps_altitude = OrderedDict()
         self.gps_snr = OrderedDict()
@@ -136,6 +137,12 @@ class SuuntoJSON:
         try:
             for value in temp["DeviceLog"]["R-R"]["Data"]:
                 self.rr.append(value)
+        except KeyError:
+            pass
+        # S+ apps
+        try:
+            for app in temp["DeviceLog"]["Zapps"]:
+                self.apps.append(app["Name"])
         except KeyError:
             pass
         file.close()

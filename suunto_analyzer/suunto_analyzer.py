@@ -16,6 +16,7 @@ def command_line():
     parser.add_argument("--distance", help="Show distance", action="store_true")
     parser.add_argument("--steps", help="Show the number of steps", action="store_true")
     parser.add_argument("--sensors", help="Show the used sensors", action="store_true")
+    parser.add_argument("--apps", help="Show the enabled S+ apps", action="store_true")
     parser.add_argument("--snr", help="Show SNR of 5 best GNSS satellites", action="store_true")
     parser.add_argument("--battery", help="Show battery consumption", action="store_true")
     parser.add_argument("--cadence", help="Show cadence", action="store_true")
@@ -42,6 +43,9 @@ def __main__():
     print()
     if arguments.sensors and len(activity.sensors) >= 1:
         print(f"Sensors:\t{activity.sensors}")
+        print()
+    if arguments.apps and len(activity.apps) >= 1:
+        print(f"S+ Apps:\t{activity.apps}")
         print()
     if arguments.duration:
         print(f"Duration:\t{datetime.timedelta(seconds=activity.duration)}")
