@@ -6,8 +6,16 @@ The idea of the tool is to be able to check some statistics extracted from the n
 
 ## Install
 
+Once you downloaded the source code of this package, just use `pip` to install it.
+
+```shell
+# example
+cd SuuntoAnalyzer
+python -m pip install .
+```
+
 ## Usage
 
 ```shell
-python suunto_analyzer.py -f <filename>
+python -m suunto_analyzer.suunto_analyzer -h
 ```
