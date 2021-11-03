@@ -1,3 +1,4 @@
+import math
 import numpy
 import datetime
 from json_reader import SuuntoJSON
@@ -63,8 +64,10 @@ def hr_analysis(activity: SuuntoJSON):
         print(f"Avg HR:\t\t{numpy.average(hr_values):.2f} ±{numpy.std(hr_values):.2f}")
         print(f"Max HR:\t\t{numpy.max(hr_values):.2f}")
     elif len(activity.rr) >= 1:
-        # TODO: remove outliers from data
-        hr_values = [(1000 / i) * 60.0 for i in activity.rr]
+        sigma = 2.25
+        rr_mean = numpy.average(activity.rr)
+        rr_std = numpy.std(activity.rr)
+        hr_values = [(1000 / i) * 60.0 for i in activity.rr if (math.fabs(i - rr_mean) < (sigma * rr_std))]
         print(f"Min HR:\t\t{numpy.min(hr_values):.2f}")
         print(f"Avg HR:\t\t{numpy.average(hr_values):.2f} ±{numpy.std(hr_values):.2f}")
         print(f"Max HR:\t\t{numpy.max(hr_values):.2f}")
