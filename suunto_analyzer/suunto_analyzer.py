@@ -2,9 +2,9 @@ import argparse
 import datetime
 from os import path
 
-import json_reader
-import analysis
-import plot
+import suunto_analyzer.json_reader as json_reader
+import suunto_analyzer.analysis as analysis
+import suunto_analyzer.plot as plot
 
 
 def command_line():

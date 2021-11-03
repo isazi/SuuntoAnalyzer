@@ -1,7 +1,7 @@
 import math
 import numpy
 import datetime
-from json_reader import SuuntoJSON
+from suunto_analyzer.json_reader import SuuntoJSON
 
 
 def gps_snr_analysis(activity: SuuntoJSON):

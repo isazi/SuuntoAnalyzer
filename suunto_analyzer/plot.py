@@ -1,7 +1,7 @@
 import datetime
 import matplotlib
 import matplotlib.pyplot as plt
-from json_reader import SuuntoJSON
+from suunto_analyzer.json_reader import SuuntoJSON
 
 
 def altitude_plot(activity: SuuntoJSON):
