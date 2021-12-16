@@ -41,6 +41,7 @@ def altitude_analysis(activity: SuuntoJSON):
     if len(altitude_values) >= 1 and len(gps_altitude_values) >= 1:
         altitude_values = numpy.array(altitude_values)
         gps_altitude_values = numpy.array(gps_altitude_values)
+        print(f"AltiBaro:\t{activity.altibaro}")
         print(f"Ascent:\t\t{activity.ascent}")
         print(f"Descent:\t{activity.descent}")
         print(f"Min altitude:\taltimeter = {numpy.min(altitude_values):.2f}m\tGNSS = {numpy.min(gps_altitude_values):.2f}m")

@@ -8,6 +8,7 @@ class SuuntoJSON:
         self.name = None
         self.datetime = None
         self.gnss = str()
+        self.altibaro = str()
         self.steps = 0
         self.duration = 0
         self.distance = 0
@@ -39,6 +40,10 @@ class SuuntoJSON:
             pass
         try:
             self.gnss = temp["DeviceLog"]["Header"]["Settings"]["EnabledNavigationSystems"]
+        except KeyError:
+            pass
+        try:
+            self.altibaro = temp["DeviceLog"]["Header"]["Settings"]["AltiBaroProfile"]
         except KeyError:
             pass
         try:
