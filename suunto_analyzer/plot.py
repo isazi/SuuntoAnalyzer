@@ -144,3 +144,19 @@ def temperature_plot(activity: SuuntoJSON):
     plt.xlabel("Time")
     plt.gcf().autofmt_xdate()
     plt.show()
+
+
+def compare_temperature_plot(activity_one: SuuntoJSON, activity_two: SuuntoJSON):
+    x_temperature_one = [datetime.datetime.fromisoformat(i) for i in activity_one.temperature.keys()]
+    y_temperature_one = [(i - 273.15) for i in activity_one.temperature.values()]
+    x_temperature_two = [datetime.datetime.fromisoformat(i) for i in activity_two.temperature.keys()]
+    y_temperature_two = [(i - 273.15) for i in activity_two.temperature.values()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_temperature_one, y_temperature_one, label=activity_one.name)
+    plt.plot(x_temperature_two, y_temperature_two, label=activity_two.name)
+    plt.ylabel("Temperature (C)")
+    plt.xlabel("Time")
+    plt.legend()
+    plt.gcf().autofmt_xdate()
+    plt.show()
+
