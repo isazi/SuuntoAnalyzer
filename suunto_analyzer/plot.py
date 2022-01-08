@@ -133,3 +133,14 @@ def battery_charge_plot(activity: SuuntoJSON):
     plt.xlabel("Time")
     plt.gcf().autofmt_xdate()
     plt.show()
+
+
+def temperature_plot(activity: SuuntoJSON):
+    x_temperature = [datetime.datetime.fromisoformat(i) for i in activity.temperature.keys()]
+    y_temperature = [(i - 273.15) for i in activity.temperature.values()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_temperature, y_temperature, "bo")
+    plt.ylabel("Temperature (C)")
+    plt.xlabel("Time")
+    plt.gcf().autofmt_xdate()
+    plt.show()

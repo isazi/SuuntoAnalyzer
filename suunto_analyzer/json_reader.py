@@ -17,6 +17,7 @@ class SuuntoJSON:
         self.descent = 0
         self.sensors = []
         self.apps = []
+        self.temperature = OrderedDict()
         self.altitude = OrderedDict()
         self.gps_altitude = OrderedDict()
         self.gps_snr = OrderedDict()
@@ -92,6 +93,12 @@ class SuuntoJSON:
         # Samples
         for sample in temp["DeviceLog"]["Samples"]:
             timestamp = sample["TimeISO8601"]
+            # Temperature
+            try:
+                if sample["Temperature"] is not None:
+                    self.temperature[timestamp] = sample["Temperature"]
+            except KeyError:
+                pass
             # Altitude
             try:
                 if sample["Altitude"] is not None:

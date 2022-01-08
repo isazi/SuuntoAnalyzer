@@ -35,6 +35,15 @@ def cadence_analysis(activity: SuuntoJSON):
         print(f"Max cadence:\t{numpy.max(cadence_values):.2f}")
 
 
+def temperature_analysis(activity: SuuntoJSON):
+    temperature_values = [(i - 273.15) for i in activity.temperature.values()]
+    if len(temperature_values) >= 1:
+        temperature_values = numpy.array(temperature_values)
+        print(f"Min temp:\t{numpy.min(temperature_values):.1f}C")
+        print(f"Avg temp:\t{numpy.average(temperature_values):.1f}C ±{numpy.std(temperature_values):.1f}C")
+        print(f"Max temp:\t{numpy.max(temperature_values):.1f}C")
+
+
 def altitude_analysis(activity: SuuntoJSON):
     altitude_values = [i for i in activity.altitude.values()]
     gps_altitude_values = [i for i in activity.gps_altitude.values()]

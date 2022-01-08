@@ -20,6 +20,7 @@ def command_line():
     parser.add_argument("--snr", help="Show SNR of 5 best GNSS satellites", action="store_true")
     parser.add_argument("--battery", help="Show battery consumption", action="store_true")
     parser.add_argument("--cadence", help="Show cadence", action="store_true")
+    parser.add_argument("--temperature", help="Show temperature", action="store_true")
     parser.add_argument("--altitude", help="Show ascent, descent, and altitude", action="store_true")
     parser.add_argument("--power", help="Show power", action="store_true")
     parser.add_argument("--hr", help="Show heart rate", action="store_true")
@@ -59,6 +60,9 @@ def __main__():
     if arguments.snr:
         analysis.gps_snr_analysis(activity)
         print()
+    if arguments.temperature:
+        analysis.temperature_analysis(activity)
+        print()
     if arguments.altitude:
         analysis.altitude_analysis(activity)
         print()
@@ -78,6 +82,8 @@ def __main__():
     if arguments.plot:
         if arguments.snr:
             plot.gps_snr_plot(activity)
+        if arguments.temperature:
+            plot.temperature_plot(activity)
         if arguments.altitude:
             plot.altitude_plot(activity)
         if arguments.cadence:
