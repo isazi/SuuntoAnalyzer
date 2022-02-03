@@ -1,6 +1,7 @@
 import argparse
 import datetime
 from os import path
+import numpy
 
 import suunto_analyzer.json_reader as json_reader
 import suunto_analyzer.analysis as analysis
@@ -56,6 +57,9 @@ def __main__():
         print()
     if arguments.steps:
         print(f"Steps:\t\t{activity.steps}")
+        if arguments.cadence:
+            cadence_values = [i for i in activity.cadence.values()]
+            print(f"Ref steps:\t{int(numpy.average(cadence_values) * 2) * int(activity.duration / 60)}")
         print()
     if arguments.snr:
         analysis.gps_snr_analysis(activity)
