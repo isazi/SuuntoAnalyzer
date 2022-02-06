@@ -59,7 +59,9 @@ def __main__():
         print(f"Steps:\t\t{activity.steps}")
         if arguments.cadence:
             cadence_values = [i for i in activity.cadence.values()]
-            print(f"Ref steps:\t{int(numpy.average(cadence_values) * 2) * int(activity.duration / 60)}")
+            ref_steps = int(numpy.average(cadence_values) * 2) * int(activity.duration / 60)
+            print(f"Ref steps:\t{ref_steps}")
+            print(f"Difference:\t{((activity.steps - ref_steps) * 100.0) / ref_steps:.2f}%")
         print()
     if arguments.snr:
         analysis.gps_snr_analysis(activity)
