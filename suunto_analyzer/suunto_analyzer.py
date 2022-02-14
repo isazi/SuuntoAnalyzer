@@ -30,6 +30,24 @@ def command_line():
     return parser.parse_args()
 
 
+def comparison(arguments: argparse.Namespace, activity: json_reader.SuuntoJSON):
+    if arguments.compare and arguments.filename2 is not None:
+        other_activity = json_reader.SuuntoJSON()
+        other_activity.load_file(arguments.filename2)
+        if arguments.snr:
+            plot.compare_gps_snr_plot(activity, other_activity)
+        if arguments.altitude:
+            plot.compare_altitude_plot(activity, other_activity)
+        if arguments.cadence:
+            plot.compare_cadence_plot(activity, other_activity)
+        if arguments.hr:
+            plot.compare_hr_plot(activity, other_activity)
+        if arguments.distance:
+            plot.compare_running_distance_plot(activity, other_activity)
+        if arguments.temperature:
+            plot.compare_temperature_plot(activity, other_activity)
+
+
 def __main__():
     print("Suunto Activity Analyzer (SAA)")
     print()
@@ -99,21 +117,7 @@ def __main__():
         if arguments.battery:
             plot.battery_charge_plot(activity)
     # Comparing with another file
-    if arguments.compare and arguments.filename2 is not None:
-        other_activity = json_reader.SuuntoJSON()
-        other_activity.load_file(arguments.filename2)
-        if arguments.snr:
-            plot.compare_gps_snr_plot(activity, other_activity)
-        if arguments.altitude:
-            plot.compare_altitude_plot(activity, other_activity)
-        if arguments.cadence:
-            plot.compare_cadence_plot(activity, other_activity)
-        if arguments.hr:
-            plot.compare_hr_plot(activity, other_activity)
-        if arguments.distance:
-            plot.compare_running_distance_plot(activity, other_activity)
-        if arguments.temperature:
-            plot.compare_temperature_plot(activity, other_activity)
+    comparison(arguments, activity)
 
 
 if __name__ == "__main__":
