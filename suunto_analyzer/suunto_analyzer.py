@@ -30,6 +30,22 @@ def command_line():
     return parser.parse_args()
 
 
+def plotting(arguments: argparse.Namespace, activity: json_reader.SuuntoJSON):
+    if arguments.plot:
+        if arguments.snr:
+            plot.gps_snr_plot(activity)
+        if arguments.temperature:
+            plot.temperature_plot(activity)
+        if arguments.altitude:
+            plot.altitude_plot(activity)
+        if arguments.cadence:
+            plot.cadence_plot(activity)
+        if arguments.hr:
+            plot.hr_plot(activity)
+        if arguments.battery:
+            plot.battery_charge_plot(activity)
+
+
 def comparison(arguments: argparse.Namespace, activity: json_reader.SuuntoJSON):
     if arguments.compare and arguments.filename2 is not None:
         other_activity = json_reader.SuuntoJSON()
@@ -103,19 +119,7 @@ def __main__():
         analysis.power_analysis(activity)
         print()
     # Plotting
-    if arguments.plot:
-        if arguments.snr:
-            plot.gps_snr_plot(activity)
-        if arguments.temperature:
-            plot.temperature_plot(activity)
-        if arguments.altitude:
-            plot.altitude_plot(activity)
-        if arguments.cadence:
-            plot.cadence_plot(activity)
-        if arguments.hr:
-            plot.hr_plot(activity)
-        if arguments.battery:
-            plot.battery_charge_plot(activity)
+    plotting(arguments, activity)
     # Comparing with another file
     comparison(arguments, activity)
 
