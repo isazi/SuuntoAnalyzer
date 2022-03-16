@@ -14,6 +14,23 @@ def gps_snr_analysis(activity: SuuntoJSON):
         print(f"SNR histogram:\t{numpy.histogram(snr_values)[0]}")
 
 
+def gps_error_analysis(activity: SuuntoJSON):
+    ehpe_values = [i for i in activity.ehpe.values()]
+    if len(ehpe_values) >= 1:
+        ehpe_values = numpy.array(ehpe_values)
+        print(f"Min GNSS EHPE:\t{numpy.min(ehpe_values)}")
+        print(f"Avg GNSS EHPE:\t{numpy.average(ehpe_values):.1f} ±{numpy.std(ehpe_values):.1f}")
+        print(f"Max GNNS EHPE:\t{numpy.max(ehpe_values)}")
+        print(f"EHPE histogram:\t{numpy.histogram(ehpe_values)[0]}")
+    evpe_values = [i for i in activity.evpe.values()]
+    if len(evpe_values) >= 1:
+        evpe_values = numpy.array(evpe_values)
+        print(f"Min GNSS EHPE:\t{numpy.min(evpe_values)}")
+        print(f"Avg GNSS EHPE:\t{numpy.average(evpe_values):.1f} ±{numpy.std(evpe_values):.1f}")
+        print(f"Max GNNS EHPE:\t{numpy.max(evpe_values)}")
+        print(f"EHPE histogram:\t{numpy.histogram(evpe_values)[0]}")
+
+
 def battery_analysis(activity: SuuntoJSON):
     battery_values = [i for i in activity.battery_charge.values()]
     if len(battery_values) >= 1:

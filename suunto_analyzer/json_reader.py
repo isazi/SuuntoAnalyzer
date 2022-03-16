@@ -21,6 +21,8 @@ class SuuntoJSON:
         self.altitude = OrderedDict()
         self.gps_altitude = OrderedDict()
         self.gps_snr = OrderedDict()
+        self.ehpe = OrderedDict()
+        self.evpe = OrderedDict()
         self.battery_charge = OrderedDict()
         self.cadence = OrderedDict()
         self.hr = OrderedDict()
@@ -114,6 +116,15 @@ class SuuntoJSON:
             # SNR 5 best satellites
             try:
                 self.gps_snr[timestamp] = sample["Satellite5BestSNR"]
+            except KeyError:
+                pass
+            # EHPE and EVPE
+            try:
+                self.ehpe[timestamp] = sample["EHPE"]
+            except KeyError:
+                pass
+            try:
+                self.evpe[timestamp] = sample["EVPE"]
             except KeyError:
                 pass
             # Battery charge

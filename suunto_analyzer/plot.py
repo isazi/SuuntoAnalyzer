@@ -80,6 +80,18 @@ def compare_gps_snr_plot(activity_one: SuuntoJSON, activity_two: SuuntoJSON):
     plt.show()
 
 
+def gps_error_plot(activity: SuuntoJSON):
+    x_gps_error = [datetime.datetime.fromisoformat(i) for i in activity.ehpe.keys()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_gps_error, activity.ehpe.values(), label="Horizontal Error")
+    plt.plot(x_gps_error, activity.evpe.values(), label="Vertical Error")
+    plt.ylabel("GNSS Error")
+    plt.xlabel("Time")
+    plt.legend()
+    plt.gcf().autofmt_xdate()
+    plt.show()
+
+
 def hr_plot(activity: SuuntoJSON):
     if len(activity.hr.values()) >= 1:
         x_hr = [datetime.datetime.fromisoformat(i) for i in activity.hr.keys()]
