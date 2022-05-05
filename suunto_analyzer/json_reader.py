@@ -9,6 +9,7 @@ class SuuntoJSON:
         self.datetime = None
         self.gnss = str()
         self.altibaro = str()
+        self.fusedalti = False
         self.steps = 0
         self.duration = 0
         self.distance = 0
@@ -80,6 +81,11 @@ class SuuntoJSON:
         try:
             if temp["DeviceLog"]["Header"]["Settings"]["PowerPodUsed"] is True:
                 self.sensors.append("Power Pod")
+        except KeyError:
+            pass
+        try:
+            if temp["DeviceLog"]["Header"]["Settings"]["FusedAltiUsed"] is True:
+                self.fusedalti = True
         except KeyError:
             pass
         try:
