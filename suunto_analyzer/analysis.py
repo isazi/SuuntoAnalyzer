@@ -25,10 +25,10 @@ def gps_error_analysis(activity: SuuntoJSON):
     evpe_values = [i for i in activity.evpe.values()]
     if len(evpe_values) >= 1:
         evpe_values = numpy.array(evpe_values)
-        print(f"Min GNSS EHPE:\t{numpy.min(evpe_values)}")
-        print(f"Avg GNSS EHPE:\t{numpy.average(evpe_values):.1f} ±{numpy.std(evpe_values):.1f}")
-        print(f"Max GNNS EHPE:\t{numpy.max(evpe_values)}")
-        print(f"EHPE histogram:\t{numpy.histogram(evpe_values)[0]}")
+        print(f"Min GNSS EVPE:\t{numpy.min(evpe_values)}")
+        print(f"Avg GNSS EVPE:\t{numpy.average(evpe_values):.1f} ±{numpy.std(evpe_values):.1f}")
+        print(f"Max GNNS EVPE:\t{numpy.max(evpe_values)}")
+        print(f"EVPE histogram:\t{numpy.histogram(evpe_values)[0]}")
 
 
 def battery_analysis(activity: SuuntoJSON):
