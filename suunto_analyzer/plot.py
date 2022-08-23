@@ -172,3 +172,25 @@ def compare_temperature_plot(activity_one: SuuntoJSON, activity_two: SuuntoJSON)
     plt.gcf().autofmt_xdate()
     plt.show()
 
+
+def power_plot(activity: SuuntoJSON):
+    x_power = [datetime.datetime.fromisoformat(i) for i in activity.power.keys()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_power, activity.power.values(), "bo")
+    plt.ylabel("Power (W)")
+    plt.xlabel("Time")
+    plt.gcf().autofmt_xdate()
+    plt.show()
+
+
+def compare_power_plot(activity_one: SuuntoJSON, activity_two: SuuntoJSON):
+    x_power_one = [datetime.datetime.fromisoformat(i) for i in activity_one.power.keys()]
+    x_power_two = [datetime.datetime.fromisoformat(i) for i in activity_two.power.keys()]
+    matplotlib.use("GTK3Cairo")
+    plt.plot(x_power_one, activity_one.power.values(), label=activity_one.name)
+    plt.plot(x_power_two, activity_two.power.values(), label=activity_two.name)
+    plt.ylabel("Power (W)")
+    plt.xlabel("Time")
+    plt.legend()
+    plt.gcf().autofmt_xdate()
+    plt.show()

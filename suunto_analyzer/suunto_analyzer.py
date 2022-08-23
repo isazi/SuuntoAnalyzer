@@ -47,6 +47,8 @@ def plotting(arguments: argparse.Namespace, activity: json_reader.SuuntoJSON):
             plot.hr_plot(activity)
         if arguments.battery:
             plot.battery_charge_plot(activity)
+        if arguments.power:
+            plot.power_plot(activity)
 
 
 def comparison(arguments: argparse.Namespace, activity: json_reader.SuuntoJSON):
@@ -65,6 +67,8 @@ def comparison(arguments: argparse.Namespace, activity: json_reader.SuuntoJSON):
             plot.compare_running_distance_plot(activity, other_activity)
         if arguments.temperature:
             plot.compare_temperature_plot(activity, other_activity)
+        if arguments.power:
+            plot.compare_power_plot(activity, other_activity)
 
 
 def __main__():
