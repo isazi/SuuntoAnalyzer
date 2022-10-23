@@ -6,6 +6,7 @@ import numpy
 import suunto_analyzer.json_reader as json_reader
 import suunto_analyzer.analysis as analysis
 import suunto_analyzer.plot as plot
+import suunto_analyzer.track as track
 
 
 def command_line():
@@ -78,6 +79,7 @@ def __main__():
     arguments = command_line()
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
+    track.plot_track(activity)
     # Base functions
     print(f"Filename:\t{path.basename(arguments.filename)}")
     print(f"Device:\t\t{activity.name}")
