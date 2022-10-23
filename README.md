@@ -6,12 +6,10 @@ The idea of the tool is to be able to check some statistics extracted from the n
 
 ## Install
 
-Once you downloaded the source code of this package, just use `pip` to install it.
+You can download and install the latest version of this package with `pip`:
 
 ```shell
-# example
-cd SuuntoAnalyzer
-python -m pip install .
+python -m pip install -U git+https://github.com/isazi/SuuntoAnalyzer 
 ```
 
 ## Usage
