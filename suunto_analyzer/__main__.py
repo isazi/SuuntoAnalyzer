@@ -25,6 +25,7 @@ def command_line():
     parser.add_argument("--cadence", help="Show cadence", action="store_true")
     parser.add_argument("--temperature", help="Show temperature", action="store_true")
     parser.add_argument("--altitude", help="Show ascent, descent, and altitude", action="store_true")
+    parser.add_argument("--track", help="Plot GNSS track", action="store_true")
     parser.add_argument("--power", help="Show power", action="store_true")
     parser.add_argument("--hr", help="Show heart rate", action="store_true")
     parser.add_argument("--compare", help="Enable comparison with a second activity file", action="store_true")
@@ -79,12 +80,13 @@ def __main__():
     arguments = command_line()
     activity = json_reader.SuuntoJSON()
     activity.load_file(arguments.filename)
-    track.plot_track(activity)
     # Base functions
     print(f"Filename:\t{path.basename(arguments.filename)}")
     print(f"Device:\t\t{activity.name}")
     print(f"GNSS:\t\t{activity.gnss}")
     print(f"Time:\t\t{activity.datetime}")
+    if arguments.track:
+        track.plot_track(activity)
     print()
     if arguments.sensors and len(activity.sensors) >= 1:
         print(f"Sensors:\t{activity.sensors}")
