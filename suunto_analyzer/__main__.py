@@ -132,7 +132,7 @@ def __main__():
         # Plotting
         if arguments.plot:
             plotting(arguments, activity)
-    # Comparing with another file
+    # Comparing metrics
     if arguments.compare:
         comparison(arguments, activities)
 
