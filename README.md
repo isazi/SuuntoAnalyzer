@@ -22,7 +22,7 @@ python -m suunto_analyzer -h
 
 Following is the output of this command:
 
-```shell
+```
 Suunto Activity Analyzer (SAA)
 
 usage: __main__.py [-h] -f FILES [FILES ...] [--plot] [--duration] [--distance] [--steps] [--sensors] [--apps] [--gps_error] [--snr] [--battery] [--cadence] [--temperature] [--altitude] [--power] [--hr]
