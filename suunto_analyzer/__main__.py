@@ -86,8 +86,6 @@ def __main__():
         print(f"GNSS:\t\t{activity.gnss}")
         print(f"Time:\t\t{activity.datetime}")
         print()
-        if arguments.track:
-            track.plot_track(activity)
         if arguments.sensors and len(activity.sensors) >= 1:
             print(f"Sensors:\t{activity.sensors}")
             print()
@@ -135,6 +133,8 @@ def __main__():
         # Plotting
         if arguments.plot:
             plotting(arguments, activity)
+    if arguments.track:
+            track.plot_track(activities)
     # Comparing with another file
     if arguments.compare:
         comparison(arguments, activities)
