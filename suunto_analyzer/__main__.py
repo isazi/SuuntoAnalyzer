@@ -26,7 +26,7 @@ def command_line():
     parser.add_argument("--altitude", help="Show ascent, descent, and altitude", action="store_true")
     parser.add_argument("--power", help="Show power", action="store_true")
     parser.add_argument("--hr", help="Show heart rate", action="store_true")
-    parser.add_argument("--compare", help="Enable comparison with a second activity file", action="store_true")
+    parser.add_argument("--compare", help="Enable comparison between activities", action="store_true")
     return parser.parse_args()
 
 
