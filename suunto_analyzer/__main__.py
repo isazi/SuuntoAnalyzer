@@ -135,7 +135,7 @@ def __main__():
             plotting(arguments, activity)
     if arguments.track:
             track.plot_track(activities)
-    # Comparing with another file
+    # Comparing metrics
     if arguments.compare:
         comparison(arguments, activities)
 
