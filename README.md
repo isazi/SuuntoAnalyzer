@@ -25,13 +25,13 @@ Following is the output of this command:
 ```
 Suunto Activity Analyzer (SAA)
 
-usage: suunto_analyzer.py [-h] -f FILENAME [--plot] [--duration] [--distance] [--steps] [--sensors] [--apps] [--gps_error] [--snr] [--battery] [--cadence] [--temperature] [--altitude] [--power] [--hr]
-                          [--compare] [-f2 FILENAME2]
+usage: __main__.py [-h] -f FILES [FILES ...] [--plot] [--duration] [--distance] [--steps] [--sensors] [--apps] [--gps_error] [--snr] [--battery] [--cadence] [--temperature] [--altitude] [--power] [--hr]
+                   [--compare]
 
 options:
   -h, --help            show this help message and exit
-  -f FILENAME, --filename FILENAME
-                        File to analyze
+  -f FILES [FILES ...], --files FILES [FILES ...]
+                        Files to analyze
   --plot                Enable plotting
   --duration            Show duration
   --distance            Show distance
@@ -46,7 +46,5 @@ options:
   --altitude            Show ascent, descent, and altitude
   --power               Show power
   --hr                  Show heart rate
-  --compare             Enable comparison with a second activity file
-  -f2 FILENAME2, --filename2 FILENAME2
-                        File to compare with
+  --compare             Enable comparison between activities
 ```
