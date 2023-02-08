@@ -2,6 +2,7 @@ import math
 import numpy
 import datetime
 from suunto_analyzer.json_reader import SuuntoJSON
+from suunto_analyzer.util import parse_seconds
 
 
 def gps_snr_analysis(activity: SuuntoJSON):
@@ -40,9 +41,12 @@ def battery_analysis(activity: SuuntoJSON):
         print(f"Max battery:\t{max_battery * 100.0}%")
         print(f"Min battery:\t{min_battery * 100.0}%")
         print(f"Consumption:\ttotal = {((max_battery - min_battery) * 100.0):.1f}%\thourly = {(((max_battery - min_battery) / (activity.duration / 3600)) * 100.0):.1f}%")
-        print(f"Estimated life:\t{datetime.timedelta(seconds=(activity.duration / (max_battery - min_battery)))}")
-        print(f"\t\t{datetime.timedelta(seconds=(activity.duration / ((max_battery - min_battery) - 0.01)))} (estimated max)")
-        print(f"\t\t{datetime.timedelta(seconds=(activity.duration / ((max_battery - min_battery) + 0.01)))} (estimated min)")
+        hours, minutes = parse_seconds(activity.duration / (max_battery - min_battery))
+        print(f"Estimated life:\t{hours}h {minutes}m")
+        hours, minutes = parse_seconds(activity.duration / ((max_battery - min_battery) + 0.01))
+        print(f"\t\t{hours}h {minutes}m (estimated min)")
+        hours, minutes = parse_seconds(activity.duration / ((max_battery - min_battery) - 0.01))
+        print(f"\t\t{hours}h {minutes}m (estimated max)")
 
 
 def cadence_analysis(activity: SuuntoJSON):
