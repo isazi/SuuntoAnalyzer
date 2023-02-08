@@ -41,12 +41,14 @@ def battery_analysis(activity: SuuntoJSON):
         print(f"Max battery:\t{max_battery * 100.0}%")
         print(f"Min battery:\t{min_battery * 100.0}%")
         print(f"Consumption:\ttotal = {((max_battery - min_battery) * 100.0):.1f}%\thourly = {(((max_battery - min_battery) / (activity.duration / 3600)) * 100.0):.1f}%")
-        hours, minutes = parse_seconds(activity.duration / (max_battery - min_battery))
-        print(f"Estimated life:\t{hours}h {minutes}m")
-        hours, minutes = parse_seconds(activity.duration / ((max_battery - min_battery) + 0.01))
-        print(f"\t\t{hours}h {minutes}m (estimated min)")
-        hours, minutes = parse_seconds(activity.duration / ((max_battery - min_battery) - 0.01))
-        print(f"\t\t{hours}h {minutes}m (estimated max)")
+        if (max_battery - min_battery) > 0:
+            hours, minutes = parse_seconds(activity.duration / (max_battery - min_battery))
+            print(f"Estimated life:\t{hours}h {minutes}m")
+        if (max_battery - min_battery) > 0.02:
+            hours, minutes = parse_seconds(activity.duration / ((max_battery - min_battery) + 0.01))
+            print(f"\t\t{hours}h {minutes}m (estimated min)")
+            hours, minutes = parse_seconds(activity.duration / ((max_battery - min_battery) - 0.01))
+            print(f"\t\t{hours}h {minutes}m (estimated max)")
 
 
 def cadence_analysis(activity: SuuntoJSON):
