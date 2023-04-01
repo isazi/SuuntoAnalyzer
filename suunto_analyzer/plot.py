@@ -1,5 +1,4 @@
 import datetime
-import matplotlib
 import matplotlib.pyplot as plt
 from suunto_analyzer.json_reader import SuuntoJSON
 
