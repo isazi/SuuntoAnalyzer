@@ -40,11 +40,15 @@ class SuuntoJSON:
         except KeyError:
             pass
         try:
-            self.datetime = datetime.datetime.fromisoformat(temp["DeviceLog"]["Header"]["DateTime"])
+            self.datetime = datetime.datetime.fromisoformat(
+                temp["DeviceLog"]["Header"]["DateTime"]
+            )
         except KeyError:
             pass
         try:
-            self.gnss = temp["DeviceLog"]["Header"]["Settings"]["EnabledNavigationSystems"]
+            self.gnss = temp["DeviceLog"]["Header"]["Settings"][
+                "EnabledNavigationSystems"
+            ]
         except KeyError:
             pass
         try:

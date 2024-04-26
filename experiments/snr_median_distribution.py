@@ -35,4 +35,3 @@ for device in data.keys():
     plt.violinplot(data[device], showmedians=True, showextrema=True)
     plt.title(device)
     plt.show()
-

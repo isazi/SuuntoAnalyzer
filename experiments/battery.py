@@ -1,4 +1,3 @@
-
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,11 +27,17 @@ for file in args.file:
     if (max_battery - min_battery) == 0:
         continue
     if "Ibiza" in activity.name:
-        data["Suunto 9 Baro"].append((activity.duration / (max_battery - min_battery)) / 3600.0)
+        data["Suunto 9 Baro"].append(
+            (activity.duration / (max_battery - min_battery)) / 3600.0
+        )
     elif "Nagano" in activity.name:
-        data["Suunto 9 Peak"].append((activity.duration / (max_battery - min_battery)) / 3600.0)
+        data["Suunto 9 Peak"].append(
+            (activity.duration / (max_battery - min_battery)) / 3600.0
+        )
     elif "Qingdao" in activity.name:
-        data["Suunto 5 Peak"].append((activity.duration / (max_battery - min_battery)) / 3600.0)
+        data["Suunto 5 Peak"].append(
+            (activity.duration / (max_battery - min_battery)) / 3600.0
+        )
     else:
         print(f"Unknown device: {activity.name}")
 
@@ -40,9 +45,15 @@ for file in args.file:
 data["Suunto 9 Baro"] = np.array(data["Suunto 9 Baro"])
 data["Suunto 9 Peak"] = np.array(data["Suunto 9 Peak"])
 data["Suunto 5 Peak"] = np.array(data["Suunto 5 Peak"])
-print(f"Avg battery life (in hours) S9B: {np.average(data['Suunto 9 Baro']):.2f} ±{np.std(data['Suunto 9 Baro']):.1f}")
-print(f"Avg battery life (in hours) S9P: {np.average(data['Suunto 9 Peak']):.2f} ±{np.std(data['Suunto 9 Peak']):.1f}")
-print(f"Avg battery life (in hours) S5P: {np.average(data['Suunto 5 Peak']):.2f} ±{np.std(data['Suunto 5 Peak']):.1f}")
+print(
+    f"Avg battery life (in hours) S9B: {np.average(data['Suunto 9 Baro']):.2f} ±{np.std(data['Suunto 9 Baro']):.1f}"
+)
+print(
+    f"Avg battery life (in hours) S9P: {np.average(data['Suunto 9 Peak']):.2f} ±{np.std(data['Suunto 9 Peak']):.1f}"
+)
+print(
+    f"Avg battery life (in hours) S5P: {np.average(data['Suunto 5 Peak']):.2f} ±{np.std(data['Suunto 5 Peak']):.1f}"
+)
 # Plotting
 plt.plot(data["Suunto 9 Baro"], label="Suunto 9 Baro")
 plt.plot(data["Suunto 9 Peak"], label="Suunto 9 Peak")
@@ -50,4 +61,3 @@ plt.plot(data["Suunto 5 Peak"], label="Suunto 5 Peak")
 plt.ylabel("Estimated Battery Life (hours)")
 plt.legend()
 plt.show()
-    

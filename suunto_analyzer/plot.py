@@ -5,7 +5,9 @@ from suunto_analyzer.json_reader import SuuntoJSON
 
 def altitude_plot(activity: SuuntoJSON):
     x_altitude = [datetime.datetime.fromisoformat(i) for i in activity.altitude.keys()]
-    x_gps_altitude = [datetime.datetime.fromisoformat(i) for i in activity.gps_altitude.keys()]
+    x_gps_altitude = [
+        datetime.datetime.fromisoformat(i) for i in activity.gps_altitude.keys()
+    ]
     plt.plot(x_altitude, activity.altitude.values(), label="Altitude (altimeter)")
     plt.plot(x_gps_altitude, activity.gps_altitude.values(), label="Altitude (GNSS)")
     plt.ylabel("Altitude (m)")
@@ -17,10 +19,22 @@ def altitude_plot(activity: SuuntoJSON):
 
 def compare_altitude_plot(activities: list):
     for activity in activities:
-        x_altitude = [datetime.datetime.fromisoformat(i) for i in activity.altitude.keys()]
-        x_gps_altitude = [datetime.datetime.fromisoformat(i) for i in activity.gps_altitude.keys()]
-        plt.plot(x_altitude, activity.altitude.values(), label=f"{activity.name} Altitude (altimeter)")
-        plt.plot(x_gps_altitude, activity.gps_altitude.values(), label=f"{activity.name} Altitude (GNSS)")
+        x_altitude = [
+            datetime.datetime.fromisoformat(i) for i in activity.altitude.keys()
+        ]
+        x_gps_altitude = [
+            datetime.datetime.fromisoformat(i) for i in activity.gps_altitude.keys()
+        ]
+        plt.plot(
+            x_altitude,
+            activity.altitude.values(),
+            label=f"{activity.name} Altitude (altimeter)",
+        )
+        plt.plot(
+            x_gps_altitude,
+            activity.gps_altitude.values(),
+            label=f"{activity.name} Altitude (GNSS)",
+        )
     plt.ylabel("Altitude (m)")
     plt.xlabel("Time")
     plt.legend()
@@ -39,7 +53,9 @@ def cadence_plot(activity: SuuntoJSON):
 
 def compare_cadence_plot(activities: list):
     for activity in activities:
-        x_cadence = [datetime.datetime.fromisoformat(i) for i in activity.cadence.keys()]
+        x_cadence = [
+            datetime.datetime.fromisoformat(i) for i in activity.cadence.keys()
+        ]
         plt.plot(x_cadence, activity.cadence.values(), label=activity.name)
     plt.ylabel("Cadence (rpm)")
     plt.xlabel("Time")
@@ -59,7 +75,9 @@ def gps_snr_plot(activity: SuuntoJSON):
 
 def compare_gps_snr_plot(activities: list):
     for activity in activities:
-        x_gps_snr = [datetime.datetime.fromisoformat(i) for i in activity.gps_snr.keys()]
+        x_gps_snr = [
+            datetime.datetime.fromisoformat(i) for i in activity.gps_snr.keys()
+        ]
         plt.plot(x_gps_snr, activity.gps_snr.values(), label=activity.name)
     plt.ylabel("GNSS SNR")
     plt.xlabel("Time")
@@ -108,8 +126,12 @@ def compare_hr_plot(activities: list):
 
 def compare_running_distance_plot(activities: list):
     for activity in activities:
-        x_running_distance = [datetime.datetime.fromisoformat(i) for i in activity.running_distance.keys()]
-        plt.plot(x_running_distance, activity.running_distance.values(), label=activity.name)
+        x_running_distance = [
+            datetime.datetime.fromisoformat(i) for i in activity.running_distance.keys()
+        ]
+        plt.plot(
+            x_running_distance, activity.running_distance.values(), label=activity.name
+        )
     plt.ylabel("Distance (m)")
     plt.xlabel("Time")
     plt.legend()
@@ -118,7 +140,9 @@ def compare_running_distance_plot(activities: list):
 
 
 def battery_charge_plot(activity: SuuntoJSON):
-    x_battery_charge = [datetime.datetime.fromisoformat(i) for i in activity.battery_charge.keys()]
+    x_battery_charge = [
+        datetime.datetime.fromisoformat(i) for i in activity.battery_charge.keys()
+    ]
     battery_charge = [i * 100.0 for i in activity.battery_charge.values()]
     plt.plot(x_battery_charge, battery_charge)
     plt.ylabel("Battery Charge (%)")
@@ -128,7 +152,9 @@ def battery_charge_plot(activity: SuuntoJSON):
 
 
 def temperature_plot(activity: SuuntoJSON):
-    x_temperature = [datetime.datetime.fromisoformat(i) for i in activity.temperature.keys()]
+    x_temperature = [
+        datetime.datetime.fromisoformat(i) for i in activity.temperature.keys()
+    ]
     y_temperature = [(i - 273.15) for i in activity.temperature.values()]
     plt.plot(x_temperature, y_temperature, "o")
     plt.ylabel("Temperature (C)")
@@ -139,7 +165,9 @@ def temperature_plot(activity: SuuntoJSON):
 
 def compare_temperature_plot(activities: list):
     for activity in activities:
-        x_temperature = [datetime.datetime.fromisoformat(i) for i in activity.temperature.keys()]
+        x_temperature = [
+            datetime.datetime.fromisoformat(i) for i in activity.temperature.keys()
+        ]
         y_temperature = [(i - 273.15) for i in activity.temperature.values()]
         plt.plot(x_temperature, y_temperature, label=activity.name)
     plt.ylabel("Temperature (C)")

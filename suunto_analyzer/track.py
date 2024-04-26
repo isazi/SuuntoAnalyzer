@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from suunto_analyzer.json_reader import SuuntoJSON
 
+
 def plot_track(activities: list):
     for activity in activities:
         lat, lon = zip(*activity.coordinates)

@@ -12,23 +12,37 @@ import suunto_analyzer.track as track
 def command_line():
     parser = argparse.ArgumentParser()
     # Files
-    parser.add_argument("-f", "--files", help="Files to analyze", type=str, required=True, nargs="+")
+    parser.add_argument(
+        "-f", "--files", help="Files to analyze", type=str, required=True, nargs="+"
+    )
     parser.add_argument("--plot", help="Enable plotting", action="store_true")
     parser.add_argument("--duration", help="Show duration", action="store_true")
     parser.add_argument("--distance", help="Show distance", action="store_true")
     parser.add_argument("--steps", help="Show the number of steps", action="store_true")
     parser.add_argument("--sensors", help="Show the used sensors", action="store_true")
     parser.add_argument("--apps", help="Show the enabled S+ apps", action="store_true")
-    parser.add_argument("--gps_error", help="Shows the GPS horizontal/vertical error.", action="store_true")
-    parser.add_argument("--snr", help="Show SNR of 5 best GNSS satellites", action="store_true")
-    parser.add_argument("--battery", help="Show battery consumption", action="store_true")
+    parser.add_argument(
+        "--gps_error",
+        help="Shows the GPS horizontal/vertical error.",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--snr", help="Show SNR of 5 best GNSS satellites", action="store_true"
+    )
+    parser.add_argument(
+        "--battery", help="Show battery consumption", action="store_true"
+    )
     parser.add_argument("--cadence", help="Show cadence", action="store_true")
     parser.add_argument("--temperature", help="Show temperature", action="store_true")
-    parser.add_argument("--altitude", help="Show ascent, descent, and altitude", action="store_true")
+    parser.add_argument(
+        "--altitude", help="Show ascent, descent, and altitude", action="store_true"
+    )
     parser.add_argument("--track", help="Plot GNSS track", action="store_true")
     parser.add_argument("--power", help="Show power", action="store_true")
     parser.add_argument("--hr", help="Show heart rate", action="store_true")
-    parser.add_argument("--compare", help="Enable comparison between activities", action="store_true")
+    parser.add_argument(
+        "--compare", help="Enable comparison between activities", action="store_true"
+    )
     return parser.parse_args()
 
 
@@ -102,9 +116,13 @@ def __main__():
             print(f"Steps:\t\t{activity.steps}")
             if arguments.cadence:
                 cadence_values = [i for i in activity.cadence.values()]
-                ref_steps = int(numpy.average(cadence_values) * 2) * int(activity.duration / 60)
+                ref_steps = int(numpy.average(cadence_values) * 2) * int(
+                    activity.duration / 60
+                )
                 print(f"Ref steps:\t{ref_steps}")
-                print(f"Difference:\t{((activity.steps - ref_steps) * 100.0) / ref_steps:.2f}%")
+                print(
+                    f"Difference:\t{((activity.steps - ref_steps) * 100.0) / ref_steps:.2f}%"
+                )
             print()
         if arguments.snr:
             analysis.gps_snr_analysis(activity)
@@ -134,7 +152,7 @@ def __main__():
         if arguments.plot:
             plotting(arguments, activity)
     if arguments.track:
-            track.plot_track(activities)
+        track.plot_track(activities)
     # Comparing metrics
     if arguments.compare:
         comparison(arguments, activities)
