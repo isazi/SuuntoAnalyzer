@@ -30,7 +30,7 @@ def compare_altitude_plot(activities: list):
 
 def cadence_plot(activity: SuuntoJSON):
     x_cadence = [datetime.datetime.fromisoformat(i) for i in activity.cadence.keys()]
-    plt.plot(x_cadence, activity.cadence.values(), "o")
+    plt.plot(x_cadence, activity.cadence.values())
     plt.ylabel("Cadence (rpm)")
     plt.xlabel("Time")
     plt.gcf().autofmt_xdate()
@@ -40,7 +40,7 @@ def cadence_plot(activity: SuuntoJSON):
 def compare_cadence_plot(activities: list):
     for activity in activities:
         x_cadence = [datetime.datetime.fromisoformat(i) for i in activity.cadence.keys()]
-        plt.plot(x_cadence, activity.cadence.values(), "o", label=activity.name)
+        plt.plot(x_cadence, activity.cadence.values(), label=activity.name)
     plt.ylabel("Cadence (rpm)")
     plt.xlabel("Time")
     plt.legend()
