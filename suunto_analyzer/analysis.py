@@ -1,3 +1,4 @@
+from datetime import datetime
 import numpy
 from suunto_analyzer.json_reader import SuuntoJSON
 from suunto_analyzer.util import parse_seconds, rr_filter
@@ -39,6 +40,7 @@ def gps_error_analysis(activity: SuuntoJSON):
 def battery_analysis(activity: SuuntoJSON):
     battery_values = [i for i in activity.battery_charge.values()]
     if len(battery_values) >= 1:
+        print("Standard analysis")
         battery_values = numpy.array(battery_values)
         max_battery = numpy.max(battery_values)
         min_battery = numpy.min(battery_values)
@@ -61,6 +63,30 @@ def battery_analysis(activity: SuuntoJSON):
                 activity.duration / ((max_battery - min_battery) - 0.01)
             )
             print(f"\t\t{hours}h {minutes}m (estimated max)")
+        old_value = -1
+        start = None
+        steps = list()
+        for key, value in activity.battery_charge.items():
+            if old_value == -1:
+                old_value = int(value * 100)
+                start = key
+                continue
+            if old_value > int(value * 100):
+                old_value = int(value * 100)
+                steps.append(
+                    (
+                        datetime.fromisoformat(key) - datetime.fromisoformat(start)
+                    ).total_seconds()
+                )
+                start = key
+        if len(steps) >= 3:
+            steps = numpy.array(steps)
+            # remove min and max
+            mask = numpy.logical_or(steps == steps.max(), steps == steps.min())
+            steps = numpy.ma.masked_array(steps, mask=mask)
+            hours, minutes = parse_seconds(steps.mean() * 100)
+            print("Step analysis")
+            print(f"Estimated life:\t{hours}h {minutes}m")
 
 
 def cadence_analysis(activity: SuuntoJSON):
