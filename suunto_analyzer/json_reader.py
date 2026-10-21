@@ -104,7 +104,7 @@ class SuuntoJSON:
         except KeyError:
             pass
         # Samples
-        for sample in temp["DeviceLog"]["Samples"]:
+        for sample in temp["DeviceLog"].get("Samples", []):
             timestamp = sample["TimeISO8601"]
             try:
                 if sample["Latitude"] is not None and sample["Longitude"] is not None:
