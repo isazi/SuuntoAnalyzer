@@ -12,6 +12,14 @@ You can download and install the latest version of this package with `pip`:
 python -m pip install -U git+https://github.com/isazi/SuuntoAnalyzer 
 ```
 
+To plot tracks (`--track`) on top of real map tiles, install the optional `map` extra (map tiles are downloaded at runtime, so network access is required):
+
+```shell
+python -m pip install -U "suunto_analyzer[map] @ git+https://github.com/isazi/SuuntoAnalyzer"
+```
+
+Without it, tracks are plotted as plain latitude/longitude lines.
+
 ## Usage
 
 To visualize the helper it is possible to use the `-h` command line argument:

@@ -12,5 +12,6 @@ setup(name="suunto_analyzer",
       url="https://github.com/isazi/SuuntoAnalyzer",
       packages=find_packages(),
       python_requires='>=3.8',
-      install_requires=["matplotlib>=3.4", "numpy>=1.22"]
+      install_requires=["matplotlib>=3.4", "numpy>=1.22"],
+      extras_require={"map": ["contextily>=1.2"]}
       )
