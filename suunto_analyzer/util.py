@@ -1,4 +1,5 @@
 import math
+import datetime
 import numpy
 
 
@@ -6,6 +7,18 @@ def parse_seconds(seconds: int):
     hours = int(seconds // 3600)
     minutes = int((seconds - (hours * 3600)) // 60)
     return hours, minutes
+
+
+def parse_timestamp(value: str) -> datetime.datetime:
+    """Parse an ISO 8601 timestamp into a timezone-aware datetime.
+
+    datetime.fromisoformat() only accepts the "Z" (UTC) designator from
+    Python 3.11 onwards, so it is rewritten as an explicit offset, which
+    every supported version understands.
+    """
+    if value and value[-1:] in ("Z", "z"):
+        value = value[:-1] + "+00:00"
+    return datetime.datetime.fromisoformat(value)
 
 
 def rr_filter(rr: list) -> list:

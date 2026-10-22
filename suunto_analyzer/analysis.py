@@ -1,4 +1,3 @@
-from datetime import datetime
 import numpy
 from suunto_analyzer.json_reader import SuuntoJSON
 from suunto_analyzer.util import parse_seconds, rr_filter
@@ -73,11 +72,7 @@ def battery_analysis(activity: SuuntoJSON):
                 continue
             if old_value > int(value * 100):
                 old_value = int(value * 100)
-                steps.append(
-                    (
-                        datetime.fromisoformat(key) - datetime.fromisoformat(start)
-                    ).total_seconds()
-                )
+                steps.append((key - start).total_seconds())
                 start = key
         if len(steps) >= 3:
             steps = numpy.array(steps)

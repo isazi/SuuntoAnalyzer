@@ -1,6 +1,7 @@
 import json
-import datetime
 from collections import OrderedDict
+
+from suunto_analyzer.util import parse_timestamp
 
 
 class SuuntoJSON:
@@ -40,10 +41,8 @@ class SuuntoJSON:
         except KeyError:
             pass
         try:
-            self.datetime = datetime.datetime.fromisoformat(
-                temp["DeviceLog"]["Header"]["DateTime"]
-            )
-        except KeyError:
+            self.datetime = parse_timestamp(temp["DeviceLog"]["Header"]["DateTime"])
+        except (KeyError, ValueError):
             pass
         try:
             self.gnss = temp["DeviceLog"]["Header"]["Settings"][
@@ -105,12 +104,17 @@ class SuuntoJSON:
             pass
         # Samples
         for sample in temp["DeviceLog"].get("Samples", []):
-            timestamp = sample["TimeISO8601"]
+            try:
+                timestamp = parse_timestamp(sample["TimeISO8601"])
+            except (KeyError, ValueError):
+                timestamp = None
             try:
                 if sample["Latitude"] is not None and sample["Longitude"] is not None:
                     self.coordinates.append((sample["Latitude"], sample["Longitude"]))
             except KeyError:
                 pass
+            if timestamp is None:
+                continue
             try:
                 if sample["Temperature"] is not None:
                     self.temperature[timestamp] = sample["Temperature"]
@@ -127,19 +131,23 @@ class SuuntoJSON:
             except KeyError:
                 pass
             try:
-                self.gps_snr[timestamp] = sample["Satellite5BestSNR"]
+                if sample["Satellite5BestSNR"] is not None:
+                    self.gps_snr[timestamp] = sample["Satellite5BestSNR"]
             except KeyError:
                 pass
             try:
-                self.ehpe[timestamp] = sample["EHPE"]
+                if sample["EHPE"] is not None:
+                    self.ehpe[timestamp] = sample["EHPE"]
             except KeyError:
                 pass
             try:
-                self.evpe[timestamp] = sample["EVPE"]
+                if sample["EVPE"] is not None:
+                    self.evpe[timestamp] = sample["EVPE"]
             except KeyError:
                 pass
             try:
-                self.battery_charge[timestamp] = sample["BatteryCharge"]
+                if sample["BatteryCharge"] is not None:
+                    self.battery_charge[timestamp] = sample["BatteryCharge"]
             except KeyError:
                 pass
             try:
@@ -174,4 +182,3 @@ class SuuntoJSON:
                 self.apps.append(app["Name"])
         except KeyError:
             pass
-        file.close()

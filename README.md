@@ -56,3 +56,17 @@ options:
   --hr                  Show heart rate
   --compare             Enable comparison between activities
 ```
+
+## Development
+
+Install the package in editable mode together with the test dependencies:
+
+```shell
+python -m pip install -e ".[dev]"
+```
+
+Run the test suite:
+
+```shell
+python -m pytest
+```
