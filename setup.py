@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name="suunto_analyzer",
-    version="0.1",
+    version="0.2",
     author="Alessio Sclocco",
     author_email="alessio@sclocco.eu",
     description="Simple tool to analyze activities recorded with Suunto watches",
