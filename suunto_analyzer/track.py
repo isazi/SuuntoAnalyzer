@@ -60,7 +60,9 @@ def plot_track(activities: list):
         update_basemap(ax, contextily, updating)
         # Reload the tiles at a suitable zoom level when zooming or panning
         for event in ("xlim_changed", "ylim_changed"):
-            ax.callbacks.connect(event, lambda _: update_basemap(ax, contextily, updating))
+            ax.callbacks.connect(
+                event, lambda _: update_basemap(ax, contextily, updating)
+            )
     else:
         ax.set_xlabel("Longitude")
         ax.set_ylabel("Latitude")
