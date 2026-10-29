@@ -7,6 +7,7 @@ import suunto_analyzer.json_reader as json_reader
 import suunto_analyzer.analysis as analysis
 import suunto_analyzer.plot as plot
 import suunto_analyzer.track as track
+from suunto_analyzer.activity import Activity
 
 
 def command_line():
@@ -46,7 +47,26 @@ def command_line():
     return parser.parse_args()
 
 
-def plotting(arguments: argparse.Namespace, activity: json_reader.SuuntoJSON):
+def load_activity(filename: str) -> Activity:
+    """Load an activity, choosing the reader from the file extension."""
+    extension = path.splitext(filename)[1].lower()
+    if extension == ".json":
+        activity = json_reader.SuuntoJSON()
+    elif extension == ".fit":
+        from suunto_analyzer import fit_reader
+
+        try:
+            fit_reader.require_fitdecode()
+        except fit_reader.FitdecodeNotInstalled as error:
+            raise SystemExit(str(error)) from None
+        activity = fit_reader.SuuntoFIT()
+    else:
+        raise SystemExit(f"Unsupported activity file: {filename}")
+    activity.load_file(filename)
+    return activity
+
+
+def plotting(arguments: argparse.Namespace, activity: Activity):
     if arguments.snr:
         plot.gps_snr_plot(activity)
     if arguments.gps_error:
@@ -89,8 +109,7 @@ def __main__():
     activities = []
     for file in arguments.files:
         print(f"Loading:\t{path.basename(file)}")
-        activity = json_reader.SuuntoJSON()
-        activity.load_file(file)
+        activity = load_activity(file)
         activities.append(activity)
     print()
     # Activity loop
@@ -116,13 +135,15 @@ def __main__():
             print(f"Steps:\t\t{activity.steps}")
             if arguments.cadence:
                 cadence_values = [i for i in activity.cadence.values()]
-                ref_steps = int(numpy.average(cadence_values) * 2) * int(
-                    activity.duration / 60
-                )
-                print(f"Ref steps:\t{ref_steps}")
-                print(
-                    f"Difference:\t{((activity.steps - ref_steps) * 100.0) / ref_steps:.2f}%"
-                )
+                if len(cadence_values) >= 1:
+                    ref_steps = int(numpy.average(cadence_values) * 2) * int(
+                        activity.duration / 60
+                    )
+                    print(f"Ref steps:\t{ref_steps}")
+                    if ref_steps > 0:
+                        print(
+                            f"Difference:\t{((activity.steps - ref_steps) * 100.0) / ref_steps:.2f}%"
+                        )
             print()
         if arguments.snr:
             analysis.gps_snr_analysis(activity)

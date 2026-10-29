@@ -3,6 +3,7 @@
 
 Simple tool to analyze activities recorded with [Suunto](https://www.suunto.com) watches.
 The idea of the tool is to be able to check some statistics extracted from the native JSON activity files, to help in testing watches.
+[FIT](https://developer.garmin.com/fit/overview/) files (the binary format used by Garmin and many other sport devices) are supported too.
 
 ## Install
 
@@ -19,6 +20,14 @@ python -m pip install -U "suunto_analyzer[map] @ git+https://github.com/isazi/Su
 ```
 
 Without it, tracks are plotted as plain latitude/longitude lines.
+
+FIT files are read through the optional `fit` extra:
+
+```shell
+python -m pip install -U "suunto_analyzer[fit] @ git+https://github.com/isazi/SuuntoAnalyzer"
+```
+
+Without it only Suunto JSON files can be loaded.
 
 ## Usage
 
@@ -56,6 +65,9 @@ options:
   --hr                  Show heart rate
   --compare             Enable comparison between activities
 ```
+
+The reader is chosen from the file extension: `.json` files are parsed as Suunto activity logs and `.fit` files as FIT activities (both can be mixed on the same command line).
+FIT files do not carry some Suunto-specific channels (satellite SNR, GNSS altitude, FusedAlti, S+ apps, steps), so those analyses and plots print nothing for them; however, `--altitude` still reports the ascent, descent and altimeter altitude found in the FIT file, and the horizontal GPS accuracy is reported as `EHPE`.
 
 ## Development
 

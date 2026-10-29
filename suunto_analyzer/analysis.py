@@ -1,9 +1,9 @@
 import numpy
-from suunto_analyzer.json_reader import SuuntoJSON
+from suunto_analyzer.activity import Activity
 from suunto_analyzer.util import parse_seconds, rr_filter
 
 
-def gps_snr_analysis(activity: SuuntoJSON):
+def gps_snr_analysis(activity: Activity):
     snr_values = [i for i in activity.gps_snr.values()]
     if len(snr_values) >= 1:
         snr_values = numpy.array(snr_values)
@@ -15,7 +15,7 @@ def gps_snr_analysis(activity: SuuntoJSON):
         print(f"SNR histogram:\t{numpy.histogram(snr_values)[0]}")
 
 
-def gps_error_analysis(activity: SuuntoJSON):
+def gps_error_analysis(activity: Activity):
     ehpe_values = [i for i in activity.ehpe.values()]
     if len(ehpe_values) >= 1:
         ehpe_values = numpy.array(ehpe_values)
@@ -36,7 +36,7 @@ def gps_error_analysis(activity: SuuntoJSON):
         print(f"EVPE histogram:\t{numpy.histogram(evpe_values)[0]}")
 
 
-def battery_analysis(activity: SuuntoJSON):
+def battery_analysis(activity: Activity):
     battery_values = [i for i in activity.battery_charge.values()]
     if len(battery_values) >= 1:
         print("Standard analysis")
@@ -84,7 +84,7 @@ def battery_analysis(activity: SuuntoJSON):
             print(f"Estimated life:\t{hours}h {minutes}m")
 
 
-def cadence_analysis(activity: SuuntoJSON):
+def cadence_analysis(activity: Activity):
     cadence_values = [i for i in activity.cadence.values()]
     if len(cadence_values) >= 1:
         cadence_values = numpy.array(cadence_values)
@@ -95,7 +95,7 @@ def cadence_analysis(activity: SuuntoJSON):
         print(f"Max cadence:\t{numpy.max(cadence_values):.2f}")
 
 
-def temperature_analysis(activity: SuuntoJSON):
+def temperature_analysis(activity: Activity):
     temperature_values = [(i - 273.15) for i in activity.temperature.values()]
     if len(temperature_values) >= 1:
         temperature_values = numpy.array(temperature_values)
@@ -106,26 +106,34 @@ def temperature_analysis(activity: SuuntoJSON):
         print(f"Max temp:\t{numpy.max(temperature_values):.1f}C")
 
 
-def altitude_analysis(activity: SuuntoJSON):
+def altitude_analysis(activity: Activity):
     altitude_values = [i for i in activity.altitude.values()]
     gps_altitude_values = [i for i in activity.gps_altitude.values()]
+    if len(altitude_values) < 1 and len(gps_altitude_values) < 1:
+        return
+    print(f"AltiBaro:\t{activity.altibaro}")
+    if activity.fusedalti:
+        print(f"FusedAlti:\tEnabled")
+    print(f"Ascent:\t\t{activity.ascent}")
+    print(f"Descent:\t{activity.descent}")
+    altitude_values = numpy.array(altitude_values)
+    gps_altitude_values = numpy.array(gps_altitude_values)
     if len(altitude_values) >= 1 and len(gps_altitude_values) >= 1:
-        altitude_values = numpy.array(altitude_values)
-        gps_altitude_values = numpy.array(gps_altitude_values)
-        print(f"AltiBaro:\t{activity.altibaro}")
-        if activity.fusedalti:
-            print(f"FusedAlti:\tEnabled")
-        print(f"Ascent:\t\t{activity.ascent}")
-        print(f"Descent:\t{activity.descent}")
         print(
             f"Min altitude:\taltimeter = {numpy.min(altitude_values):.2f}m\tGNSS = {numpy.min(gps_altitude_values):.2f}m"
         )
         print(
             f"Max altitude:\taltimeter = {numpy.max(altitude_values):.2f}m\tGNSS = {numpy.max(gps_altitude_values):.2f}m"
         )
+    elif len(altitude_values) >= 1:
+        print(f"Min altitude:\taltimeter = {numpy.min(altitude_values):.2f}m")
+        print(f"Max altitude:\taltimeter = {numpy.max(altitude_values):.2f}m")
+    else:
+        print(f"Min altitude:\tGNSS = {numpy.min(gps_altitude_values):.2f}m")
+        print(f"Max altitude:\tGNSS = {numpy.max(gps_altitude_values):.2f}m")
 
 
-def power_analysis(activity: SuuntoJSON):
+def power_analysis(activity: Activity):
     power_values = [i for i in activity.power.values()]
     if len(power_values) >= 1:
         power_values = numpy.array(power_values)
@@ -136,7 +144,7 @@ def power_analysis(activity: SuuntoJSON):
         print(f"Max power:\t{numpy.max(power_values):.2f}")
 
 
-def hr_analysis(activity: SuuntoJSON):
+def hr_analysis(activity: Activity):
     hr_values = [i for i in activity.hr.values()]
     if len(hr_values) >= 1:
         hr_values = numpy.array(hr_values)

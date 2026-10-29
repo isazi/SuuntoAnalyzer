@@ -14,5 +14,9 @@ setup(
     packages=find_packages(),
     python_requires=">=3.8",
     install_requires=["matplotlib>=3.4", "numpy>=1.22"],
-    extras_require={"map": ["contextily>=1.2"], "dev": ["pytest>=7"]},
+    extras_require={
+        "fit": ["fitdecode>=0.10"],
+        "map": ["contextily>=1.2"],
+        "dev": ["pytest>=7", "fitdecode>=0.10"],
+    },
 )

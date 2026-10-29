@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-from suunto_analyzer.json_reader import SuuntoJSON
+from suunto_analyzer.activity import Activity
 
 
-def altitude_plot(activity: SuuntoJSON):
+def altitude_plot(activity: Activity):
     plt.plot(
         activity.altitude.keys(),
         activity.altitude.values(),
@@ -39,7 +39,7 @@ def compare_altitude_plot(activities: list):
     plt.show()
 
 
-def cadence_plot(activity: SuuntoJSON):
+def cadence_plot(activity: Activity):
     plt.plot(activity.cadence.keys(), activity.cadence.values())
     plt.ylabel("Cadence (rpm)")
     plt.xlabel("Time")
@@ -59,7 +59,7 @@ def compare_cadence_plot(activities: list):
     plt.show()
 
 
-def gps_snr_plot(activity: SuuntoJSON):
+def gps_snr_plot(activity: Activity):
     plt.plot(activity.gps_snr.keys(), activity.gps_snr.values())
     plt.ylabel("GNSS SNR")
     plt.xlabel("Time")
@@ -79,7 +79,7 @@ def compare_gps_snr_plot(activities: list):
     plt.show()
 
 
-def gps_error_plot(activity: SuuntoJSON):
+def gps_error_plot(activity: Activity):
     plt.plot(activity.ehpe.keys(), activity.ehpe.values(), label="Horizontal Error")
     plt.plot(activity.evpe.keys(), activity.evpe.values(), label="Vertical Error")
     plt.ylabel("GNSS Error")
@@ -89,7 +89,7 @@ def gps_error_plot(activity: SuuntoJSON):
     plt.show()
 
 
-def hr_plot(activity: SuuntoJSON):
+def hr_plot(activity: Activity):
     if len(activity.hr.values()) >= 1:
         plt.plot(activity.hr.keys(), activity.hr.values())
         plt.ylabel("Heart Rate (bpm)")
@@ -128,7 +128,7 @@ def compare_running_distance_plot(activities: list):
     plt.show()
 
 
-def battery_charge_plot(activity: SuuntoJSON):
+def battery_charge_plot(activity: Activity):
     battery_charge = [i * 100.0 for i in activity.battery_charge.values()]
     plt.plot(activity.battery_charge.keys(), battery_charge)
     plt.ylabel("Battery Charge (%)")
@@ -137,7 +137,7 @@ def battery_charge_plot(activity: SuuntoJSON):
     plt.show()
 
 
-def temperature_plot(activity: SuuntoJSON):
+def temperature_plot(activity: Activity):
     y_temperature = [(i - 273.15) for i in activity.temperature.values()]
     plt.plot(activity.temperature.keys(), y_temperature, "o")
     plt.ylabel("Temperature (C)")
@@ -157,7 +157,7 @@ def compare_temperature_plot(activities: list):
     plt.show()
 
 
-def power_plot(activity: SuuntoJSON):
+def power_plot(activity: Activity):
     plt.plot(activity.power.keys(), activity.power.values(), "o")
     plt.ylabel("Power (W)")
     plt.xlabel("Time")

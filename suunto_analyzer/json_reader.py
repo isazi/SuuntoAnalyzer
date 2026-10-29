@@ -1,37 +1,10 @@
 import json
-from collections import OrderedDict
 
+from suunto_analyzer.activity import Activity
 from suunto_analyzer.util import parse_timestamp
 
 
-class SuuntoJSON:
-    def __init__(self):
-        self.name = None
-        self.datetime = None
-        self.gnss = str()
-        self.altibaro = str()
-        self.fusedalti = False
-        self.steps = 0
-        self.duration = 0
-        self.distance = 0
-        self.running_distance = OrderedDict()
-        self.ascent = 0
-        self.descent = 0
-        self.sensors = []
-        self.apps = []
-        self.coordinates = []
-        self.temperature = OrderedDict()
-        self.altitude = OrderedDict()
-        self.gps_altitude = OrderedDict()
-        self.gps_snr = OrderedDict()
-        self.ehpe = OrderedDict()
-        self.evpe = OrderedDict()
-        self.battery_charge = OrderedDict()
-        self.cadence = OrderedDict()
-        self.hr = OrderedDict()
-        self.rr = []
-        self.power = OrderedDict()
-
+class SuuntoJSON(Activity):
     def load_file(self, filename: str):
         with open(filename) as file:
             temp = json.load(file)
