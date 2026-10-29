@@ -21,6 +21,7 @@ from fit_writer import FitFile, compute_crc  # noqa: E402
 
 START = datetime.datetime(2025, 1, 1, tzinfo=datetime.timezone.utc)
 STEP = datetime.timedelta(seconds=60)
+START_PLUS_30 = START + datetime.timedelta(minutes=30)
 TIMES = [START + STEP * (index + 1) for index in range(3)]
 
 
@@ -218,6 +219,19 @@ def test_device_info_without_source_type_uses_device_index(tmp_path):
     activity.load_file(write_fit(tmp_path, fit.to_bytes()))
     assert activity.name == "Watch"
     assert activity.battery_charge[START] == 0.5
+
+
+def test_device_info_without_source_type_or_device_index_is_the_watch(tmp_path):
+    # Some devices omit both fields; the FIT defaults then make the
+    # message the local/creator device. A real Suunto Vertical 2 export
+    # writes its battery this way.
+    fit = FitFile()
+    fit.add(23, timestamp=START, product_name="Watch", battery_level=50)
+    fit.add(23, timestamp=START_PLUS_30, product_name="", battery_level=49)
+    activity = SuuntoFIT()
+    activity.load_file(write_fit(tmp_path, fit.to_bytes()))
+    assert activity.name == "Watch"
+    assert list(activity.battery_charge.values()) == [0.5, 0.49]
 
 
 def test_name_falls_back_to_the_sport(tmp_path):

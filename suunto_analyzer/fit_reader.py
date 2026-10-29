@@ -140,11 +140,13 @@ class SuuntoFIT(Activity):
     def _add_device_info(self, frame):
         values = self._values(frame)
         # device_info also describes connected sensors; only the watch
-        # itself (source_type "local", or the creator device) describes
-        # the activity.
-        local = values.get("source_type") == "local" or (
-            values.get("source_type") is None
-            and values.get("device_index") in (0, "creator")
+        # itself describes the activity: source_type "local" (the FIT
+        # default), or the creator device. Some producers omit both
+        # fields entirely for the watch; the defaults are then local.
+        source_type = values.get("source_type")
+        device_index = values.get("device_index")
+        local = source_type == "local" or (
+            source_type is None and device_index in (0, "creator", None)
         )
         if not local:
             return
