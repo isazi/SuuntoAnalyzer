@@ -25,6 +25,7 @@ from collections import OrderedDict
 class Activity:
     def __init__(self):
         self.name = None
+        self.filename = ""
         self.datetime = None
         self.sport = None
         self.gnss = str()

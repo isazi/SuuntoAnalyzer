@@ -47,7 +47,9 @@ def command_line():
         "--rr", help="Show inter-beat intervals (R-R)", action="store_true"
     )
     parser.add_argument(
-        "--compare", help="Enable comparison between activities", action="store_true"
+        "--compare",
+        help="Compare activities (text; add --plot for comparison plots)",
+        action="store_true",
     )
     return parser.parse_args()
 
@@ -68,6 +70,7 @@ def load_activity(filename: str) -> Activity:
     else:
         raise SystemExit(f"Unsupported activity file: {filename}")
     activity.load_file(filename)
+    activity.filename = filename
     return activity
 
 
@@ -92,9 +95,161 @@ def plotting(arguments: argparse.Namespace, activity: Activity):
         plot.power_plot(activity)
 
 
+MISSING = "–"
+
+
+def normalize_label(label: str) -> str:
+    return label.replace("\t", "").rstrip()
+
+
+def collect_rows(
+    activities: list[Activity], stats_func
+) -> list[tuple[str, list[str | None]]]:
+    """Turn per-activity stats into comparison rows.
+
+    The row labels are the union of all activities' rows, in order of
+    first appearance. An activity without a row gets ``None``.
+    """
+    rows_per_activity = [
+        {normalize_label(label): value for label, value in stats_func(activity)}
+        for activity in activities
+    ]
+    labels: list[str] = []
+    for stats in rows_per_activity:
+        for label in stats:
+            if not label or "histogram" in label:
+                continue
+            if label not in labels:
+                labels.append(label)
+    rows = list()
+    for label in labels:
+        cells = [
+            values.get(label, "").replace("\t", "  ").rstrip() or None
+            for values in rows_per_activity
+        ]
+        rows.append((label, cells))
+    return rows
+
+
+def print_table(
+    title: str,
+    headers: list[str],
+    rows: list[tuple[str, list[str | None]]],
+):
+    cells = [
+        [value if value is not None else MISSING for value in row[1]] for row in rows
+    ]
+    first_width = max(len(label) for label, _ in rows)
+    widths = [
+        max(len(headers[index]), max(len(row[index]) for row in cells))
+        for index in range(len(headers))
+    ]
+    print(title)
+    print(" " * first_width + "  ", end="")
+    print("  ".join(header.rjust(width) for header, width in zip(headers, widths)))
+    for (label, _), row in zip(rows, cells):
+        print(
+            label.ljust(first_width)
+            + "  "
+            + "  ".join(cell.rjust(width) for cell, width in zip(row, widths))
+        )
+
+
+def column_headers(activities: list[Activity]) -> list[str]:
+    counts = {}
+    for activity in activities:
+        counts[activity.name] = counts.get(activity.name, 0) + 1
+    headers = list()
+    for activity in activities:
+        name = activity.name or "Unknown"
+        if counts[activity.name] > 1:
+            name = f"{name} ({path.basename(activity.filename)})"
+        headers.append(name)
+    return headers
+
+
+def text_comparison(arguments: argparse.Namespace, activities: list[Activity]) -> bool:
+    """Print a text based side-by-side comparison of the activities.
+
+    Returns True when anything was printed.
+    """
+    headers = column_headers(activities)
+    blocks: list[tuple[str, list[tuple[str, list[str | None]]]]] = list()
+    summary: list[tuple[str, list[str | None]]] = list()
+    if arguments.duration:
+        summary.append(
+            (
+                "Duration",
+                [
+                    str(datetime.timedelta(seconds=activity.duration))
+                    for activity in activities
+                ],
+            )
+        )
+    if arguments.distance:
+        summary.append(
+            ("Distance", [f"{activity.distance:.2f} km" for activity in activities])
+        )
+    if arguments.steps:
+        summary.append(("Steps", [str(activity.steps) for activity in activities]))
+    if summary:
+        blocks.append(("Summary", summary))
+    if arguments.snr and any(activity.gps_snr for activity in activities):
+        blocks.append(("GNSS SNR", collect_rows(activities, analysis.gps_snr_stats)))
+    if arguments.gps_error and any(
+        activity.ehpe or activity.evpe for activity in activities
+    ):
+        blocks.append(
+            ("GNSS error", collect_rows(activities, analysis.gps_error_stats))
+        )
+    if arguments.altitude and any(
+        activity.altitude or activity.gps_altitude for activity in activities
+    ):
+        blocks.append(("Altitude", collect_rows(activities, analysis.altitude_stats)))
+    if arguments.cadence and any(activity.cadence for activity in activities):
+        blocks.append(("Cadence", collect_rows(activities, analysis.cadence_stats)))
+    if arguments.hr and any(activity.hr for activity in activities):
+        blocks.append(("Heart rate", collect_rows(activities, analysis.hr_stats)))
+    if arguments.rr and any(activity.rr for activity in activities):
+        blocks.append(("R-R", collect_rows(activities, analysis.rr_stats)))
+    if arguments.distance and any(activity.running_distance for activity in activities):
+        blocks.append(
+            (
+                "Running distance",
+                collect_rows(activities, analysis.running_distance_stats),
+            )
+        )
+    if arguments.temperature and any(activity.temperature for activity in activities):
+        blocks.append(
+            ("Temperature", collect_rows(activities, analysis.temperature_stats))
+        )
+    if arguments.battery and any(activity.battery_charge for activity in activities):
+        blocks.append(("Battery", collect_rows(activities, analysis.battery_stats)))
+    if arguments.power and any(activity.power for activity in activities):
+        blocks.append(("Power", collect_rows(activities, analysis.power_stats)))
+    printed_any = False
+    for title, rows in blocks:
+        if not rows:
+            continue
+        if printed_any:
+            print()
+        print_table(title, headers, rows)
+        printed_any = True
+    return printed_any
+
+
 def comparison(arguments: argparse.Namespace, activities: list[Activity]):
-    # Only draw a comparison plot when at least one activity carries
+    # Only compare what at least one activity carries samples for:
+    # empty output would be confusing.
+    if text_comparison(arguments, activities):
+        print()
+    # Only draw comparison plots when at least one activity carries
     # samples for the metric: empty charts would be confusing.
+    if arguments.plot:
+        plot_comparison(arguments, activities)
+
+
+def plot_comparison(arguments: argparse.Namespace, activities: list[Activity]):
     if arguments.snr and any(activity.gps_snr for activity in activities):
         plot.compare_gps_snr_plot(activities)
     if arguments.gps_error and any(
