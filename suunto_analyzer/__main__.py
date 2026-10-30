@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 import datetime
 from os import path
@@ -42,6 +44,9 @@ def command_line():
     parser.add_argument("--power", help="Show power", action="store_true")
     parser.add_argument("--hr", help="Show heart rate", action="store_true")
     parser.add_argument(
+        "--rr", help="Show inter-beat intervals (R-R)", action="store_true"
+    )
+    parser.add_argument(
         "--compare", help="Enable comparison between activities", action="store_true"
     )
     return parser.parse_args()
@@ -79,26 +84,40 @@ def plotting(arguments: argparse.Namespace, activity: Activity):
         plot.cadence_plot(activity)
     if arguments.hr:
         plot.hr_plot(activity)
+    if arguments.rr:
+        plot.rr_plot(activity)
     if arguments.battery:
         plot.battery_charge_plot(activity)
     if arguments.power:
         plot.power_plot(activity)
 
 
-def comparison(arguments: argparse.Namespace, activities: list):
-    if arguments.snr:
+def comparison(arguments: argparse.Namespace, activities: list[Activity]):
+    # Only draw a comparison plot when at least one activity carries
+    # samples for the metric: empty charts would be confusing.
+    if arguments.snr and any(activity.gps_snr for activity in activities):
         plot.compare_gps_snr_plot(activities)
-    if arguments.altitude:
+    if arguments.gps_error and any(
+        activity.ehpe or activity.evpe for activity in activities
+    ):
+        plot.compare_gps_error_plot(activities)
+    if arguments.altitude and any(
+        activity.altitude or activity.gps_altitude for activity in activities
+    ):
         plot.compare_altitude_plot(activities)
-    if arguments.cadence:
+    if arguments.cadence and any(activity.cadence for activity in activities):
         plot.compare_cadence_plot(activities)
-    if arguments.hr:
+    if arguments.hr and any(activity.hr for activity in activities):
         plot.compare_hr_plot(activities)
-    if arguments.distance:
+    if arguments.rr and any(activity.rr for activity in activities):
+        plot.compare_rr_plot(activities)
+    if arguments.distance and any(activity.running_distance for activity in activities):
         plot.compare_running_distance_plot(activities)
-    if arguments.temperature:
+    if arguments.temperature and any(activity.temperature for activity in activities):
         plot.compare_temperature_plot(activities)
-    if arguments.power:
+    if arguments.battery and any(activity.battery_charge for activity in activities):
+        plot.compare_battery_charge_plot(activities)
+    if arguments.power and any(activity.power for activity in activities):
         plot.compare_power_plot(activities)
 
 

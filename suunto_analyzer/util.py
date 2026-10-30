@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import math
 import datetime
 import numpy
 
 
-def parse_seconds(seconds: int):
+def parse_seconds(seconds: float) -> tuple[int, int]:
     hours = int(seconds // 3600)
     minutes = int((seconds - (hours * 3600)) // 60)
     return hours, minutes
@@ -21,7 +23,7 @@ def parse_timestamp(value: str) -> datetime.datetime:
     return datetime.datetime.fromisoformat(value)
 
 
-def rr_filter(rr: list) -> list:
+def rr_filter(rr: list[float]) -> list[float]:
     sigma = 2.25
     rr_mean = numpy.average(rr)
     rr_std = numpy.std(rr)

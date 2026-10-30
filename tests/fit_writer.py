@@ -55,6 +55,7 @@ FIELDS = {
         "total_elapsed_time": (7, "uint32", 1000, 0, None, False),
         "total_timer_time": (8, "uint32", 1000, 0, None, False),
         "total_distance": (9, "uint32", 100, 0, None, False),
+        "total_strides": (10, "uint32", 1, 0, None, False),
         "total_ascent": (22, "uint16", 1, 0, None, False),
         "total_descent": (23, "uint16", 1, 0, None, False),
     },

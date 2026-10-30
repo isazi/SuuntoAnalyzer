@@ -32,6 +32,7 @@ def build_fit(
     device_info=True,
     sensor_info=False,
     hrv=True,
+    total_strides=None,
 ):
     """Build a small but complete FIT activity."""
     fit = FitFile()
@@ -46,8 +47,7 @@ def build_fit(
             product_name="SyntheticWatch",
         )
     if session:
-        fit.add(
-            18,
+        session_values = dict(
             start_time=START,
             sport="running",
             total_timer_time=600.0,
@@ -56,6 +56,11 @@ def build_fit(
             total_ascent=12,
             total_descent=7,
         )
+        if total_strides is not None:
+            # Encoded as FIT field 10; fitdecode resolves the name via
+            # the sport subfield.
+            session_values["total_strides"] = total_strides
+        fit.add(18, **session_values)
     if device_info:
         fit.add(
             23,
@@ -120,6 +125,78 @@ def test_header(activity):
     assert activity.distance == 0.3
     assert activity.ascent == 12
     assert activity.descent == 7
+
+
+def test_steps_come_from_total_strides(tmp_path):
+    activity = load(tmp_path, total_strides=10262)
+    assert activity.steps == 10262
+
+
+def test_steps_default_to_zero_without_total_strides(tmp_path):
+    activity = load(tmp_path)
+    assert activity.steps == 0
+
+
+def test_naive_datetimes_are_treated_as_utc(tmp_path):
+    naive = datetime.datetime(2025, 6, 1, 12, 0, 0)
+    fit = FitFile()
+    fit.add(
+        0,
+        type="activity",
+        manufacturer=1,
+        product=123,
+        serial_number=42,
+        time_created=naive,
+        product_name="SyntheticWatch",
+    )
+    loaded = SuuntoFIT()
+    loaded.load_file(write_fit(tmp_path, fit.to_bytes()))
+    assert loaded.datetime.tzinfo is not None
+    assert loaded.datetime == naive.replace(tzinfo=datetime.timezone.utc)
+
+
+def test_product_name_longer_than_the_definition_size(tmp_path):
+    # The writer sizes each field from the first message of its type;
+    # later, longer strings are truncated to that size. The loader must
+    # still read the file.
+    fit = FitFile()
+    fit.add(
+        0,
+        type="activity",
+        manufacturer=1,
+        product=123,
+        serial_number=42,
+        time_created=START,
+        product_name="SyntheticWatch",
+    )
+    fit.add(
+        23,
+        timestamp=START,
+        device_index=0,
+        source_type="local",
+        product_name="OH1",
+        battery_level=90,
+    )
+    fit.add(
+        23,
+        timestamp=START_PLUS_30,
+        device_index=0,
+        source_type="local",
+        product_name="SyntheticWatch Mk II Extreme Long Edition",
+        battery_level=80,
+    )
+    loaded = SuuntoFIT()
+    loaded.load_file(write_fit(tmp_path, fit.to_bytes()))
+    assert loaded.name == "SyntheticWatch"
+    assert list(loaded.battery_charge.values()) == [0.90, 0.80]
+
+
+def test_duration_falls_back_to_total_elapsed_time(tmp_path):
+    fit = FitFile()
+    fit.add(18, start_time=START, sport="running", total_elapsed_time=610.0)
+    loaded = SuuntoFIT()
+    loaded.load_file(write_fit(tmp_path, fit.to_bytes()))
+    assert loaded.duration == 610.0
 
 
 def test_sample_keys_are_timezone_aware_datetimes(activity):

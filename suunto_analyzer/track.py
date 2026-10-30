@@ -1,19 +1,24 @@
+from __future__ import annotations
+
 import math
 import numpy
 import matplotlib.pyplot as plt
+from suunto_analyzer.activity import Activity
 
 EARTH_RADIUS = 6378137.0
 TILE_SIZE = 256
 MAX_ZOOM = 19
 
 
-def web_mercator(lat: list, lon: list) -> tuple:
+def web_mercator(
+    lat: numpy.ndarray, lon: numpy.ndarray
+) -> tuple[numpy.ndarray, numpy.ndarray]:
     x = numpy.radians(lon) * EARTH_RADIUS
     y = numpy.log(numpy.tan(numpy.pi / 4 + numpy.radians(lat) / 2)) * EARTH_RADIUS
     return x, y
 
 
-def tile_zoom(ax) -> int:
+def tile_zoom(ax: plt.Axes) -> int:
     xmin, xmax = ax.get_xlim()
     width = ax.get_position().width * ax.figure.bbox.width
     resolution = (xmax - xmin) / width
@@ -21,7 +26,7 @@ def tile_zoom(ax) -> int:
     return max(0, min(MAX_ZOOM, zoom))
 
 
-def update_basemap(ax, contextily, updating: list):
+def update_basemap(ax: plt.Axes, contextily: object, updating: list[bool]):
     # add_basemap changes the axes limits, which would trigger this function again
     if updating:
         return
@@ -38,7 +43,7 @@ def update_basemap(ax, contextily, updating: list):
         updating.clear()
 
 
-def plot_track(activities: list):
+def plot_track(activities: list[Activity]):
     try:
         import contextily
     except ImportError:

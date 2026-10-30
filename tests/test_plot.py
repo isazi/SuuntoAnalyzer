@@ -54,6 +54,19 @@ def test_hr_plot(activity):
     assert len(plt.gca().lines) == 1
 
 
+def test_rr_plot(activity):
+    plot.rr_plot(activity)
+    assert len(plt.gca().lines) == 1
+
+
+def test_hr_plot_does_not_fall_back_to_rr(activity):
+    activity.hr = {}  # simulate a monitor without HR
+    plot.hr_plot(activity)
+    assert len(plt.gca().lines) == 0
+    plot.rr_plot(activity)
+    assert len(plt.gca().lines) == 1
+
+
 def test_battery_charge_plot(activity):
     plot.battery_charge_plot(activity)
     assert len(plt.gca().lines) == 1
@@ -91,6 +104,9 @@ def test_compare_plots(activity):
     plot.compare_hr_plot(activities)
     assert len(plt.gca().lines) == 2
     plt.close("all")
+    plot.compare_rr_plot(activities)
+    assert len(plt.gca().lines) == 2
+    plt.close("all")
     plot.compare_running_distance_plot(activities)
     assert len(plt.gca().lines) == 2
     plt.close("all")
@@ -99,6 +115,12 @@ def test_compare_plots(activity):
     plt.close("all")
     plot.compare_power_plot(activities)
     assert len(plt.gca().lines) == 2
+    plt.close("all")
+    plot.compare_battery_charge_plot(activities)
+    assert len(plt.gca().lines) == 2
+    plt.close("all")
+    plot.compare_gps_error_plot(activities)
+    assert len(plt.gca().lines) == 4
 
 
 def test_track_plot_without_map_tiles(activity, monkeypatch):

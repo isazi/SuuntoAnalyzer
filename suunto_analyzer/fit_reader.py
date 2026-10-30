@@ -123,6 +123,12 @@ class SuuntoFIT(Activity):
         descent = values.get("total_descent")
         if descent is not None:
             self.descent = descent
+        steps = values.get("total_strides")
+        if steps is not None:
+            # Suunto fills this field with the same number the JSON
+            # export reports as StepCount (verified against a paired
+            # export of the same activity), despite the "strides" name.
+            self.steps = int(round(steps))
         sport = values.get("sport")
         if sport is not None:
             self.sport = sport

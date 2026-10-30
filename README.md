@@ -42,7 +42,7 @@ Following is the output of this command:
 ```
 Suunto Activity Analyzer (SAA)
 
-usage: __main__.py [-h] -f FILES [FILES ...] [--plot] [--duration] [--distance] [--steps] [--sensors] [--apps] [--gps_error] [--snr] [--battery] [--cadence] [--temperature] [--altitude] [--power] [--hr]
+usage: __main__.py [-h] -f FILES [FILES ...] [--plot] [--duration] [--distance] [--steps] [--sensors] [--apps] [--gps_error] [--snr] [--battery] [--cadence] [--temperature] [--altitude] [--power] [--hr] [--rr]
                    [--compare]
 
 options:
@@ -63,11 +63,12 @@ options:
   --altitude            Show ascent, descent, and altitude
   --power               Show power
   --hr                  Show heart rate
+  --rr                  Show inter-beat intervals (R-R)
   --compare             Enable comparison between activities
 ```
 
 The reader is chosen from the file extension: `.json` files are parsed as Suunto activity logs and `.fit` files as FIT activities (both can be mixed on the same command line).
-FIT files do not carry some Suunto-specific channels (satellite SNR, GNSS altitude, FusedAlti, S+ apps, steps), so those analyses and plots print nothing for them; however, `--altitude` still reports the ascent, descent and altimeter altitude found in the FIT file, and the horizontal GPS accuracy is reported as `EHPE`.
+FIT files do not carry some Suunto-specific channels (satellite SNR, GNSS altitude, FusedAlti, S+ apps), so those analyses and plots print nothing for them; however, `--altitude` still reports the ascent, descent and altimeter altitude found in the FIT file, the horizontal GPS accuracy is reported as `EHPE`, and `--steps` reports the session `total_strides` value for running activities (verified to match the `StepCount` of the JSON export of the same activity).
 
 ## Development
 
