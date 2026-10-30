@@ -227,22 +227,6 @@ def altitude_analysis(activity: Activity):
     print_rows(altitude_stats(activity))
 
 
-def running_distance_stats(activity: Activity) -> list[Row]:
-    distance_values = [i for i in activity.running_distance.values()]
-    rows = list()
-    if len(distance_values) >= 1:
-        distance_values = numpy.array(distance_values)
-        rows.append(("Min distance:\t", f"{numpy.min(distance_values):.2f}"))
-        rows.append(
-            (
-                "Avg distance:\t",
-                f"{numpy.average(distance_values):.2f} ±{numpy.std(distance_values):.2f}",
-            )
-        )
-        rows.append(("Max distance:\t", f"{numpy.max(distance_values):.2f}"))
-    return rows
-
-
 def power_stats(activity: Activity) -> list[Row]:
     power_values = [i for i in activity.power.values()]
     rows = list()

@@ -42,7 +42,7 @@ Following is the output of this command:
 ```
 Suunto Activity Analyzer (SAA)
 
-usage: __main__.py [-h] -f FILES [FILES ...] [--plot] [--duration]
+usage: __main__.py [-h] -f FILES [FILES ...] [--plot] [--all] [--duration]
                    [--distance] [--steps] [--sensors] [--apps] [--gps_error]
                    [--snr] [--battery] [--cadence] [--temperature]
                    [--altitude] [--track] [--power] [--hr] [--rr] [--compare]
@@ -52,6 +52,7 @@ options:
   -f, --files FILES [FILES ...]
                         Files to analyze
   --plot                Enable plotting
+  --all                 Enable all metrics
   --duration            Show duration
   --distance            Show distance
   --steps               Show the number of steps
@@ -72,7 +73,7 @@ options:
 ```
 
 The reader is chosen from the file extension: `.json` files are parsed as Suunto activity logs and `.fit` files as FIT activities (both can be mixed on the same command line).
-`--compare` prints a text comparison of the loaded activities: one side-by-side table per selected metric (same flags as the comparison plots), including the duration, distance and steps when `--duration`, `--distance` and `--steps` are given. Metrics that no activity carries are skipped, and a metric that only some activities carry shows `–` for the others. Adding `--plot` draws the comparison plots as well.
+`--compare` prints a text comparison of the loaded activities: one side-by-side table per selected metric (same flags as the comparison plots, except the cumulative per-sample running distance, which only makes sense as a plot), including the duration, distance and steps when `--duration`, `--distance` and `--steps` are given. Metrics that no activity carries are skipped, and a metric that only some activities carry shows `–` for the others. Every table is followed by a differences table ("... differences") with the signed difference (later activity minus earlier) of every pair of activities (`Diff 1→2`, `Diff 1→3`, `Diff 2→3`, ...): durations and battery lives are subtracted as times, numbers as values with their unit, and rows whose differences cannot be computed are skipped. Adding `--plot` draws the comparison plots as well.
 FIT files do not carry some Suunto-specific channels (satellite SNR, GNSS altitude, FusedAlti, S+ apps), so those analyses and plots print nothing for them; however, `--altitude` still reports the ascent, descent and altimeter altitude found in the FIT file, the horizontal GPS accuracy is reported as `EHPE`, and `--steps` reports the session `total_strides` value for running activities (verified to match the `StepCount` of the JSON export of the same activity).
 
 ## Development

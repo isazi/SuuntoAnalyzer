@@ -146,12 +146,19 @@ def test_text_comparison_skips_metrics_without_data(capsys):
         "Cadence",
         "Heart rate",
         "R-R",
-        "Running distance",
         "Temperature",
         "Battery",
         "Power",
     ):
         assert title not in out
+
+
+def test_text_comparison_has_no_running_distance(activity, capsys):
+    # The cumulative per-sample distance only makes sense as a plot.
+    arguments = make_arguments(distance=True)
+    assert text_comparison(arguments, [activity]) is True
+    out = capsys.readouterr().out
+    assert "Running distance" not in out
 
 
 def test_text_comparison_marks_missing_cells(activity, capsys):
@@ -161,6 +168,47 @@ def test_text_comparison_marks_missing_cells(activity, capsys):
     out = capsys.readouterr().out
     assert "–" in out
     assert "4200.00" in out
+
+
+def test_text_comparison_adds_difference_columns(activity_file, capsys):
+    first = SuuntoJSON()
+    first.load_file(activity_file)
+    second = SuuntoJSON()
+    second.load_file(activity_file)
+    arguments = make_arguments(duration=True, distance=True, steps=True)
+    text_comparison(arguments, [first, second])
+    out = capsys.readouterr().out
+    assert "Summary differences" in out
+    assert "Diff 1→2" in out
+    assert "+0:00:00" in out
+    assert "+0.00 km" in out
+    assert " +0\n" in out
+
+
+def test_text_difference_table_has_all_pairs(activity_file, capsys):
+    activities = list()
+    for _ in range(3):
+        loaded = SuuntoJSON()
+        loaded.load_file(activity_file)
+        activities.append(loaded)
+    arguments = make_arguments(steps=True)
+    text_comparison(arguments, activities)
+    out = capsys.readouterr().out
+    assert "Diff 1→2" in out
+    assert "Diff 1→3" in out
+    assert "Diff 2→3" in out
+
+
+def test_text_difference_for_missing_cells_is_missing(activity, capsys):
+    empty = SuuntoJSON()
+    arguments = make_arguments(hr=True)
+    text_comparison(arguments, [empty, activity])
+    out = capsys.readouterr().out
+    # The three HR cells are missing for the empty activity: the main
+    # table marks them, and the all-missing difference rows get dropped
+    # so no "Heart rate differences" table is printed.
+    assert "Heart rate differences" not in out
+    assert out.count("–") == 3
 
 
 def test_text_comparison_disambiguates_equal_names(activity_file, capsys):

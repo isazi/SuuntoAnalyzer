@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import datetime
 from os import path
+import re
+
 import numpy
 
 import suunto_analyzer.json_reader as json_reader
@@ -19,6 +21,7 @@ def command_line():
         "-f", "--files", help="Files to analyze", type=str, required=True, nargs="+"
     )
     parser.add_argument("--plot", help="Enable plotting", action="store_true")
+    parser.add_argument("--all", help="Enable all metrics", action="store_true")
     parser.add_argument("--duration", help="Show duration", action="store_true")
     parser.add_argument("--distance", help="Show distance", action="store_true")
     parser.add_argument("--steps", help="Show the number of steps", action="store_true")
@@ -51,7 +54,26 @@ def command_line():
         help="Compare activities (text; add --plot for comparison plots)",
         action="store_true",
     )
-    return parser.parse_args()
+    arguments = parser.parse_args()
+    if arguments.all:
+        for name in (
+            "duration",
+            "distance",
+            "steps",
+            "sensors",
+            "apps",
+            "gps_error",
+            "snr",
+            "battery",
+            "cadence",
+            "temperature",
+            "altitude",
+            "power",
+            "hr",
+            "rr",
+        ):
+            setattr(arguments, name, True)
+    return arguments
 
 
 def load_activity(filename: str) -> Activity:
@@ -129,6 +151,96 @@ def collect_rows(
         ]
         rows.append((label, cells))
     return rows
+
+
+# A duration cell like "0:10:00" or a battery life like "24h 20m
+# (estimated min)".
+DURATION_CELL = re.compile(r"^(?P<h>\d+):(?P<m>\d{1,2}):(?P<s>\d+(?:\.\d+)?)$")
+LIFE_CELL = re.compile(r"^(?P<h>\d+)h (?P<m>\d+)m(?:\s*\(.*)?$")
+# One number with an optional trailing unit, e.g. "-2.80" + "m", "2.00" + " km".
+NUMBER_CELL = re.compile(r"(?P<value>-?\d+(?:\.\d+)?)(?P<unit>\s*(?:m|km|%|C))?")
+
+
+def signed_duration(seconds: float) -> str:
+    sign = "-" if seconds < 0 else "+"
+    hours, rest = divmod(round(abs(seconds)), 3600)
+    minutes, secs = divmod(rest, 60)
+    return f"{sign}{hours}:{minutes:02d}:{secs:02d}"
+
+
+def signed_life(minutes: float) -> str:
+    sign = "-" if minutes < 0 else "+"
+    minutes = round(abs(minutes))
+    return f"{sign}{minutes // 60}h {minutes % 60}m"
+
+
+def difference(first: str | None, second: str | None) -> str:
+    """Signed difference between two table cells (later minus earlier).
+
+    Durations and battery lives are subtracted as times, numbers with a
+    unit are subtracted pairwise with their unit, anything else, or a
+    missing cell, yields ``–``.
+    """
+    if not first or not second:
+        return MISSING
+    start = DURATION_CELL.match(first)
+    end = DURATION_CELL.match(second)
+    if start and end:
+        seconds_start = (
+            int(start.group("h")) * 3600
+            + int(start.group("m")) * 60
+            + float(start.group("s"))
+        )
+        seconds_end = (
+            int(end.group("h")) * 3600
+            + int(end.group("m")) * 60
+            + float(end.group("s"))
+        )
+        return signed_duration(seconds_end - seconds_start)
+    start = LIFE_CELL.match(first)
+    end = LIFE_CELL.match(second)
+    if start and end:
+        minutes_start = int(start.group("h")) * 60 + int(start.group("m"))
+        minutes_end = int(end.group("h")) * 60 + int(end.group("m"))
+        return signed_life(minutes_end - minutes_start)
+    numbers_start = list(NUMBER_CELL.finditer(first.split("±")[0]))
+    numbers_end = list(NUMBER_CELL.finditer(second.split("±")[0]))
+    if len(numbers_start) < 1 or len(numbers_start) != len(numbers_end):
+        return MISSING
+    cells = list()
+    for start, end in zip(numbers_start, numbers_end):
+        value = float(end.group("value")) - float(start.group("value"))
+        if value == 0:
+            value = 0.0  # keep -0.00 from appearing
+        decimals = len(start.group("value").partition(".")[2])
+        unit = start.group("unit") or ""
+        cells.append(f"{value:+.{decimals}f}{unit}")
+    return "  ".join(cells)
+
+
+def pairs_of_activities(count: int) -> list[tuple[int, int]]:
+    return [
+        (first, second) for first in range(count) for second in range(first + 1, count)
+    ]
+
+
+def difference_rows(
+    rows: list[tuple[str, list[str | None]]],
+    pairs: list[tuple[int, int]],
+) -> list[tuple[str, list[str | None]]]:
+    """Signed difference columns of all activity pairs (later minus earlier).
+
+    Rows whose differences all turn out missing (e.g. textual cells) are
+    dropped to keep the table informative.
+    """
+    extended = list()
+    for label, cells in rows:
+        pair_cells = [
+            difference(cells[first], cells[second]) for first, second in pairs
+        ]
+        if any(cell != MISSING for cell in pair_cells):
+            extended.append((label, pair_cells))
+    return extended
 
 
 def print_table(
@@ -212,13 +324,6 @@ def text_comparison(arguments: argparse.Namespace, activities: list[Activity]) -
         blocks.append(("Heart rate", collect_rows(activities, analysis.hr_stats)))
     if arguments.rr and any(activity.rr for activity in activities):
         blocks.append(("R-R", collect_rows(activities, analysis.rr_stats)))
-    if arguments.distance and any(activity.running_distance for activity in activities):
-        blocks.append(
-            (
-                "Running distance",
-                collect_rows(activities, analysis.running_distance_stats),
-            )
-        )
     if arguments.temperature and any(activity.temperature for activity in activities):
         blocks.append(
             ("Temperature", collect_rows(activities, analysis.temperature_stats))
@@ -227,6 +332,11 @@ def text_comparison(arguments: argparse.Namespace, activities: list[Activity]) -
         blocks.append(("Battery", collect_rows(activities, analysis.battery_stats)))
     if arguments.power and any(activity.power for activity in activities):
         blocks.append(("Power", collect_rows(activities, analysis.power_stats)))
+    pair_headers: list[str] = list()
+    pairs: list[tuple[int, int]] = list()
+    if len(activities) >= 2:
+        pairs = pairs_of_activities(len(activities))
+        pair_headers = [f"Diff {first + 1}→{second + 1}" for first, second in pairs]
     printed_any = False
     for title, rows in blocks:
         if not rows:
@@ -235,6 +345,11 @@ def text_comparison(arguments: argparse.Namespace, activities: list[Activity]) -
             print()
         print_table(title, headers, rows)
         printed_any = True
+        if pair_headers:
+            difference = difference_rows(rows, pairs)
+            if difference:
+                print()
+                print_table(f"{title} differences", pair_headers, difference)
     return printed_any
 
 
